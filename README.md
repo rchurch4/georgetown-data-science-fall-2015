@@ -4,3 +4,5 @@ Data Science project by Rob Churchill, Nathan Hauke, Thomas Hernandez, and Ravi 
 rob - check
 
 nathan - check
+
+ravi - check
