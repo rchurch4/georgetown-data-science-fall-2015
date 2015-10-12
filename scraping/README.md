@@ -1,3 +1,3 @@
-# georgetown-data-science-fall-2015
+# scraping
 
 Scraping scripts.
