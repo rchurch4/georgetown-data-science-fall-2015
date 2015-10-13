@@ -1,9 +1,10 @@
 ################
 # yelp_json_to_csv.py
-# Version 1
-# 
+# Version 2
+# Python 2 
+#
 # Note:
-# Current script (version 1) is based on yelp_dc_pilot.json
+# Current script (Version 2) is based on yelp_dc_pilot_2.json
 #
 # Description:
 # This script takes as input the scraped restaurants from yelp in
@@ -14,6 +15,12 @@
 # The json input is structured as a list of dictionaries, where
 # each dictionary is associated with one restaurant. 
 #
+# Output Details:
+# csv where each row represents a unique user review
+#
+# File Dependencies:
+# yelp_dc_pilot_2.json
+#
 # References:
 #   1) Loading json into csv. 
 #      http://stackoverflow.com/questions/13938183/python-json-string-to-list-of-dictionaries-getting-error-when-iterating
@@ -23,13 +30,8 @@
 import json
 import csv
 
-# First, read in data, and print the restaurant name. 
-# So, we should loop through the list of restaurants. 
-# Then, we should print: current_element["name"] to get
-# the restaurant name. 
-
 # Read in scraped data from json input. 
-with file('data/yelp_dc_pilot.json', 'r') as yelp_input_file:
+with file('data/yelp_dc_pilot_2.json', 'r') as yelp_input_file:
     yelp_data_string = yelp_input_file.read()
 
 # Convert data to a list.
@@ -48,7 +50,9 @@ yelp_data_header = {'restaurant_name': None,
                     'user_name': None,                               
                     'user_rating': None,
                     'user_review': None,
-                    'user_location': None}
+                    'user_location': None,
+					'user_num_reviews': None,
+					'user_review_date': None}
 
 # Form each final observation and store in a list.
 # Loop through restaurants
@@ -65,12 +69,13 @@ for i, current_restaurant in enumerate(yelp_restaurant_list):
                                'user_name': current_review['name'].encode('utf-8').strip(),                               
                                'user_rating': current_review['rating'],
                                'user_review': current_review['review'].encode('utf-8').strip(),
-                               'user_location': current_review['location'].encode('utf-8').strip()}
+                               'user_location': current_review['location'].encode('utf-8').strip(),
+                               'user_num_reviews': current_review['exp'].encode('utf-8').strip(),
+                               'user_review_date': current_review['date'].encode('utf-8').strip()}
         yelp_observations_list.append(current_observation)
-        #print current_observation['user_name']
         
 # Write to a csv file. 
-with file('data/yelp_dc_pilot.csv', 'wb') as yelp_output_file:
+with file('data/yelp_dc_pilot_2.csv', 'wb') as yelp_output_file:
     yelp_csv_ouput = csv.DictWriter(yelp_output_file, yelp_data_header.keys())
     yelp_csv_ouput.writerow(dict(zip(yelp_data_header.keys(), yelp_data_header.keys()))) # write header
     for i, current_obs in enumerate(yelp_observations_list):
