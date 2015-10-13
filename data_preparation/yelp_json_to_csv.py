@@ -9,7 +9,8 @@
 # Description:
 # This script takes as input the scraped restaurants from yelp in
 # json format, and outputs a csv file with the same information, 
-# but organized so that each observation is a review. 
+# but organized so that each observation is a review. The script
+# also encodes string inputs as UTF-8.  
 #
 # Input Details:
 # The json input is structured as a list of dictionaries, where
@@ -47,6 +48,7 @@ yelp_data_header = {'restaurant_name': None,
                     'restaurant_num_reviews': None,
                     'restaurant_url': None,
                     'restaurant_phone': None,
+                    'restaurant_address': None,                    
                     'user_name': None,                               
                     'user_rating': None,
                     'user_review': None,
@@ -60,12 +62,13 @@ for i, current_restaurant in enumerate(yelp_restaurant_list):
     # Loop through reviews
     for j, current_review in enumerate(current_restaurant['reviews']):
         # Form current_observation
-        current_observation = {'restaurant_name': current_restaurant['name'].strip(),
+        current_observation = {'restaurant_name': current_restaurant['name'].encode('utf-8').strip(),
                                'restaurant_location': 'Washington, DC',
                                'restaurant_overall_rating': current_restaurant['rating'],
                                'restaurant_num_reviews': current_restaurant['num_reviews'],
                                'restaurant_url': current_restaurant['url'].strip(),
                                'restaurant_phone': current_restaurant['phone'],
+                               'restaurant_address': current_restaurant['address'].encode('utf-8').strip(),
                                'user_name': current_review['name'].encode('utf-8').strip(),                               
                                'user_rating': current_review['rating'],
                                'user_review': current_review['review'].encode('utf-8').strip(),
@@ -73,6 +76,8 @@ for i, current_restaurant in enumerate(yelp_restaurant_list):
                                'user_num_reviews': current_review['exp'].encode('utf-8').strip(),
                                'user_review_date': current_review['date'].encode('utf-8').strip()}
         yelp_observations_list.append(current_observation)
+
+print "finished forming observations"
         
 # Write to a csv file. 
 with file('data/yelp_dc_pilot_2.csv', 'wb') as yelp_output_file:

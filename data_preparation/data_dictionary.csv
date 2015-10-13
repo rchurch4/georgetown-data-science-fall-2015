@@ -5,6 +5,7 @@ restaurant_overall_rating,scraped json,yelp,float,,restaurant global rating; ori
 restaurant_num_reviews,scraped json,yelp,int,,number of reviews for restaurant,proper data type,missing values,
 restaurant_url,scraped json,yelp,str,,restaurant website,proper data type,missing values,
 restaurant_phone,scraped json,yelp,str,,restaurant phone number,proper data type,missing values,number of digits
+restaurant_address,scraped json,,,,,,,
 user_name,"scraped json - extracted from ""reviews"" attribute",yelp,str,,,proper data type,missing values,
 user_rating,"scraped json - extracted from ""reviews"" attribute",yelp,float,,originally called 'rating' - changed to avoid confusion with overall restaurant rating,proper data type,missing values,
 user_review,"scraped json - extracted from ""reviews"" attribute",yelp,str,,,proper data type,missing values,
