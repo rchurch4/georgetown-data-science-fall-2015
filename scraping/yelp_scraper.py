@@ -28,7 +28,7 @@ def get_text(tags):
 
 def get_review_page(url, offset):
     url = url + '?start=' + str(offset)
-    delay = 1
+    delay = 0.5
     while True:
         try:
             time.sleep(delay)
@@ -84,7 +84,7 @@ def get_search_page(offset, location):
 	html = response.text.encode('utf-8')
 	return html
 
-def parse_search_page(html):
+def parse_search_page(html, ctr):
 	restaurants = []
 	soup = BeautifulSoup(html, 'lxml')
 	wrappers = soup.findAll('div', {'class':'search-result natural-search-result'})
@@ -101,7 +101,8 @@ def parse_search_page(html):
 		rating = float(money_re.sub('', info.find('div', {'class':'rating-large'}).find('i')['title']))/10.0
 		num_reviews, reviews = get_all_reviews(base_url + url)
 		restaurants.append({'name':name, 'address':address, 'url':url, 'rating':rating, 'num_reviews':num_reviews, 'phone':phone, 'reviews':reviews})
-		print name
+		ctr += 1
+		print name, ctr
 	return restaurants
 
 def write_data(restaurants, file_prefix, file_ctr):
@@ -113,13 +114,13 @@ def write_data(restaurants, file_prefix, file_ctr):
 def get_restaurants(location_code, size):
     location = 'Washington,+DC,+USA' if location_code == 'dc' else 'Nashville,+TN,+USA'
     offset = 0
-    # done up to dc_5, start at 6, need to go back for dc_0, nsh_0-5
-    saved = 300
-    file_ctr = 6
+    # done up to dc_9, start at 10, need to go back for dc_0, nsh_0-9
+    saved = 500
+    file_ctr = 10
     restaurants = []
     while offset + saved < size:
         html = get_search_page(offset+saved, location)
-        restaurants += parse_search_page(html)
+        restaurants += parse_search_page(html, offset, saved)
         offset = len(restaurants)
         if offset % 50 == 0:
             write_data(restaurants, location_code, file_ctr)
