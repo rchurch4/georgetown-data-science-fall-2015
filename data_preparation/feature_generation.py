@@ -22,6 +22,7 @@ import os
 from geopy.geocoders import Nominatim
 from geopy.distance import vincenty
 import time
+import sys
 
 # Load data in as a Pandas DataFrame.
 d = pd.read_csv('data/yelp_dc_pilot_2.csv')
@@ -37,8 +38,8 @@ d = pd.read_csv('data/yelp_dc_pilot_2.csv')
 # set to len(d) when final processing is done. And when
 # final processing is done, it probably makes sense to
 # output to a new csv. 
-#num_rows = len(d)
-num_rows = 30
+num_rows = len(d)
+#num_rows = 3
 
 ################
 # Some data cleaning
@@ -85,6 +86,13 @@ def make_restaurant_geocode():
             d.loc[i, 'restaurant_longitude'] = nashville_geocode.longitude
     print 'make_restaurant_geocode() complete'
 
+################################
+################################
+#### optimize idea: 
+#### GET geocodes for each unique city separately
+#### create a lookup table
+################################
+################################
 def make_user_geocode():
     # Generates: 
     #   d.user_latitude, 
@@ -98,7 +106,8 @@ def make_user_geocode():
             d.loc[i, 'user_latitude'] = current_user_geocode.latitude
             d.loc[i, 'user_longitude'] = current_user_geocode.longitude
             #time.sleep(0.25) # wait since there is one api call per iteration
-        except AttributeError:
+        except:
+            print i, 'exception thrown', sys.exc_info()
             continue
         print i # check progress
     print 'make_user_geocode() complete'
