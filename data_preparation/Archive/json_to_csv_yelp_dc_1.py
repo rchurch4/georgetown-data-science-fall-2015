@@ -1,7 +1,7 @@
 ################
-# json_to_csv_yelp.py
-# Version 2
-# Python 2
+# json_to_csv_yelp_dc_1.py
+# Version 1
+# Python 2 
 #
 # Description:
 # This script takes as input the scraped restaurants from yelp in
@@ -17,7 +17,7 @@
 # csv where each row represents a unique user review
 #
 # File Dependencies:
-#   input_file_path (user-defined)
+# yelp_dc_1.json
 #
 # References:
 #   1) Loading json into csv. 
@@ -28,14 +28,8 @@
 import json
 import csv
 
-################
-# Set file paths (user-defined)
-################
-input_file_path = 'data/yelp_dc_9.json'
-output_file_path = 'data/yelp_dc_9.csv'
-
 # Read in scraped data from json input. 
-with file(input_file_path, 'r') as yelp_input_file:
+with file('data/yelp_dc_1.json', 'r') as yelp_input_file:
     yelp_data_string = yelp_input_file.read()
 
 # Convert data to a list.
@@ -83,7 +77,7 @@ for i, current_restaurant in enumerate(yelp_restaurant_list):
 print "finished forming observations"
         
 # Write to a csv file. 
-with file(output_file_path, 'wb') as yelp_output_file:
+with file('data/yelp_dc_1.csv', 'wb') as yelp_output_file:
     yelp_csv_ouput = csv.DictWriter(yelp_output_file, yelp_data_header.keys())
     yelp_csv_ouput.writerow(dict(zip(yelp_data_header.keys(), yelp_data_header.keys()))) # write header
     for i, current_obs in enumerate(yelp_observations_list):
