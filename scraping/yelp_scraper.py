@@ -4,6 +4,8 @@
 # I used the following resources:
 # -http://stackoverflow.com/questions/11205386/python-beautifulsoup-get-an-attribute-value-based-on-the-name-attribute
 #  for help with exracting star rating from the meta tag
+# -https://www.quora.com/For-the-Python-requests-get-method-how-can-I-while-loop-the-function-to-ensure-it-goes-forever-until-a-connection-is-made
+#  for help diagnosing ConnectionError and exponential backoff solution
 # -Rob Churchill HW 2
 # 
 
@@ -15,18 +17,26 @@ import re
 
 user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36"
 headers = {'User-Agent': user_agent}
-base_url = "http://www.yelp.com/"
+base_url = "http://www.yelp.com"
 regex = re.compile('[^A-Za-z0-9\s]')
 money_re = re.compile('[^0-9]+')
 # class for number of reviews by a reviewer
-experience_class = 'i-wrap ig-wrap-common_sprite i-18x18_review_c-common_sprite-wrap'
+experience_class = 'i-18x18_review_c-common_sprite-wrap'
  
 def get_text(tags):
     return [tag.get_text() for tag in tags]
 
 def get_review_page(url, offset):
     url = url + '?start=' + str(offset)
-    response = requests.get(url, headers=headers)
+    delay = 1
+    while True:
+        try:
+            time.sleep(delay)
+            response = requests.get(url, headers=headers)
+            break
+        except requests.exceptions.ConnectionError:
+            wait *= 2
+            print 'Connection Error, backing off for', delay, 'seconds'
     html = response.text.encode('utf-8')
     return html
 
@@ -45,22 +55,31 @@ def parse_review_page(html):
 
 def review_dict_entry(name, location, experience, date, rating, review):
     return {'name':name, 'location':location, 'exp':experience, 'date':date, 'rating':rating, 'review':review}
-        
 
-def get_all_reviews(url, num_reviews):
+# get the number of English reviews as classified by Yelp
+def get_num_reviews(url):
+    html = get_review_page(url, 0)
+    soup = BeautifulSoup(html, 'lxml')
+    eng_tab = soup.find('span', {'data-lang':'en'}).find('span', class_='tab-link_count')
+    num_reviews = eng_tab.get_text().strip('()')
+    return int(num_reviews)
+    
+def get_all_reviews(url):
     reviews = []
     offset = 0
+    num_reviews = get_num_reviews(url)
+    print "num_reviews:", num_reviews
     while offset < num_reviews:
         html = get_review_page(url, offset)
         reviews += parse_review_page(html)
         offset = len(reviews)
-        time.sleep(3)
-    return reviews
+        print offset
+    return num_reviews, reviews
 
 
 # ROB HW2
 def get_search_page(offset, location):
-	url = base_url + 'search?find_loc=' + location + '&cflt=restaurants&start=' + str(offset)
+	url = base_url + '/search?find_loc=' + location + '&cflt=restaurants&start=' + str(offset)
 	response = requests.get(url, headers=headers)
 	html = response.text.encode('utf-8')
 	return html
@@ -80,13 +99,13 @@ def parse_search_page(html):
 		url = title_stuff['href']
                 name = title_stuff.get_text()
 		rating = float(money_re.sub('', info.find('div', {'class':'rating-large'}).find('i')['title']))/10.0
-		(num_reviews, reviews) = get_all_reviews(base_url + url)
+		num_reviews, reviews = get_all_reviews(base_url + url)
 		restaurants.append({'name':name, 'address':address, 'url':url, 'rating':rating, 'num_reviews':num_reviews, 'phone':phone, 'reviews':reviews})
 		print name
 	return restaurants
 
 def write_data(restaurants, file_prefix, file_ctr):
-    filename = 'yelp_' + file_prefix + '_' + str(file_ctr) + '.json'
+    filename = '../data/yelp_' + file_prefix + '_' + str(file_ctr) + '.json'
     with open(filename, 'w') as f:
         f.write(json.dumps(restaurants))
     print 'saved ' + filename
@@ -94,14 +113,14 @@ def write_data(restaurants, file_prefix, file_ctr):
 def get_restaurants(location_code, size):
     location = 'Washington,+DC,+USA' if location_code == 'dc' else 'Nashville,+TN,+USA'
     offset = 0
-    saved = 0
-    file_ctr = 0
+    # done up to dc_5, start at 6, need to go back for dc_0, nsh_0-5
+    saved = 300
+    file_ctr = 6
     restaurants = []
     while offset + saved < size:
         html = get_search_page(offset+saved, location)
         restaurants += parse_search_page(html)
         offset = len(restaurants)
-        time.sleep(3)
         if offset % 50 == 0:
             write_data(restaurants, location_code, file_ctr)
             saved += len(restaurants)
