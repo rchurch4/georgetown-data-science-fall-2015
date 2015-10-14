@@ -1,32 +1,3 @@
-
-
-
-
-
-# this script needs a major update. it needs to take in
-# the current lookup table, then find the unique cities
-# in any new source data set, remove those that have already
-# been geocoded, and then geocode the remaining ones. 
-# then, it should append to the lookup csv output. 
-#
-# write now it just overwrites and checks everything from
-# the source. 
-
-
-
-
-
-# update_geocode_lookup_table
-# Version 1
-#
-# Description:
-# Script creates geocode lookup table for cities.
-# This avoids the need to repeatedly ping the API
-# every time we need the geocode for a city. It also
-# help avoid the api ping time out, since only unique
-# cities are pinged rather than all cities in the data
-# set (e.g. less api calls).
-
 import pandas as pd
 import numpy as np
 import os
@@ -43,10 +14,11 @@ import sys
 # may be used. 
 ################
 
-input_file_path = 'data/yelp_dc_2.csv'
+input_file_path = 'data/yelp_dc_3.csv'
 output_file_path = 'data/geocode_lookup_table_1.csv' 
 #       change output to geocode_lookup_table.csv
-#       once script working well
+#       once script working well (unless currently
+#       using the file elsewhere)
 
 ################
 # Update geocodes 
