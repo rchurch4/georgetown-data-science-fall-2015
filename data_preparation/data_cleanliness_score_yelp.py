@@ -8,63 +8,49 @@
 # File Dependencies:
 #   
 
-# List of yelp features:
-#   restaurant_name
-#   restaurant_location
-#   restaurant_overall_rating
-#   restaurant_num_reviews
-#   restaurant_url
-#   restaurant_phone
-#   restaurant_address
-#   user_name
-#   user_rating
-#   user_review
-#   user_location
-#   user_num_reviews
-#   user_review_date
+import pandas as pd
+import numpy as np
 
-# List of Nominatim (geocode) features:
-#   restaurant_latitude
-#   restaurant_longitude
-#   user_latitude
-#   user_longitude   
+# Make score data frame index from features. 
+score_index = [
+'restaurant_name',
+'restaurant_location',
+'restaurant_overall_rating',
+'restaurant_num_reviews',
+'restaurant_url',
+'restaurant_phone',
+'restaurant_address',
+'user_name',
+'user_rating',
+'user_review',
+'user_location',
+'user_num_reviews',
+'user_review_date',
+'restaurant_latitude',
+'restaurant_longitude',
+'user_latitude',
+'user_longitude',
+'user_restaurant_distance',
+'user_is_local',    
+'user_review_length',    
+'mean_restaurant_rating_yelp',
+'mean_restaurant_rating_yelp_local',
+'mean_restaurant_rating_yelp_local'
+]
 
-# List of extra features:
-#   user_restaurant_distance   
-#   user_is_local    
-#   user_review_length    
-#   mean_restaurant_rating_yelp
-#   mean_restaurant_rating_yelp_local
-#   mean_restaurant_rating_yelp_local
+score_categories = [
+'missing_values', # proportion of values DON'T have missing values (importance not too high)
+'realistic_values', # proportion of values that are realistic (importance high)
+'correct_data_type', # ensure column is the correct data type
+'outliers', # 1 - (proportion of values that are outliers)
+'sufficient_sample_size' # ensure some minimum number of observations are available for analysis
+]
 
+# Create score dataframe
+score_df = pd.DataFrame(np.NaN, index = score_index, columns=score_categories)
 
-
-
-
-
-
-
-''' Ideas:
-# Description:
-# 
-
-# Things to Check:
-
-# Check for reasonable values for numerical variables. 
-
-# Check for reasonable values for categorical variables. (e.g. region should be local or non-local)
-
-# Count missing values for each variable. 
-
-# Look for outliers. 
-
-# Trailing white spaces. 
+print score_df
+#print len(score_df)
 
 
 
-###### idea: score each column in different categories, then take a weighted average based on importance of each column. 
-
-# "column health"
-
-# anohter idea: can assign a score based on sample_size for a desired type of analysis.
-'''
