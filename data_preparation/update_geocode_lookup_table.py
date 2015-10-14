@@ -14,11 +14,11 @@ import sys
 # may be used. 
 ################
 
-input_file_path = 'data/yelp_dc_3.csv'
-output_file_path = 'data/geocode_lookup_table_1.csv' 
-#       change output to geocode_lookup_table.csv
-#       once script working well (unless currently
-#       using the file elsewhere)
+input_file_path = 'data/yelp_dc_9.csv'
+output_file_path = 'data/geocode_lookup_table_9.csv' 
+#       better not to overwrite geocode_lookup_table.csv
+#       better to manually rename after, since that
+#       file also gets read in by script. 
 
 ################
 # Update geocodes 

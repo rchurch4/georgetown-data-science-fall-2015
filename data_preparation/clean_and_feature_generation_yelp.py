@@ -36,8 +36,8 @@ import sys
 # may be used. 
 ################
 
-input_data_path = 'data/yelp_dc_2.csv'
-output_data_path = 'data/yelp_dc_2_cleaned_features.csv'
+input_data_path = 'data/yelp_dc_9.csv'
+output_data_path = 'data/yelp_dc_9_cleaned_features.csv'
 
 ################
 # Data loading
