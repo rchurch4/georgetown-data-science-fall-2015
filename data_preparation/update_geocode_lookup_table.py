@@ -44,7 +44,9 @@ import sys
 ################
 
 input_file_path = 'data/yelp_dc_2.csv'
-output_file_path = 'data/geocode_lookup_table_1.csv'
+output_file_path = 'data/geocode_lookup_table_1.csv' 
+#       change output to geocode_lookup_table.csv
+#       once script working well
 
 ################
 # Update geocodes 
@@ -64,23 +66,17 @@ keep_new_locations = list(set(new_data_locations) - set(old_data_locations))
 # Make data frame for new locations
 keep_new_locations_df = pd.DataFrame({'user_location' : keep_new_locations})
 
-print keep_new_locations_df
-
-'''
-# Set up lookup dataframe with unique cities
-d = pd.read_csv(input_file_path)
-geocode_lookup_table = pd.DataFrame(d.user_location.unique()[1635: ])
-geocode_lookup_table.columns = ['user_location'] # rename column
-num_items_to_geocode = len(geocode_lookup_table)
+# Heads up on size
+num_items_to_geocode = len(keep_new_locations_df)
 print 'items to geocode:', num_items_to_geocode
 
 # Get geocodes for unique cities
-for i in range(len(geocode_lookup_table)): 
+for i in range(len(keep_new_locations_df)): 
     try:
         geolocator = Nominatim()
-        current_geocode = geolocator.geocode(geocode_lookup_table.loc[i, 'user_location'], timeout=10)
-        geocode_lookup_table.loc[i, 'user_latitude'] = current_geocode.latitude
-        geocode_lookup_table.loc[i, 'user_longitude'] = current_geocode.longitude
+        current_geocode = geolocator.geocode(keep_new_locations_df.loc[i, 'user_location'], timeout=10)
+        keep_new_locations_df.loc[i, 'user_latitude'] = current_geocode.latitude
+        keep_new_locations_df.loc[i, 'user_longitude'] = current_geocode.longitude
         time.sleep(1.25)
             # at least 1 second delay - http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy
     except: 
@@ -93,7 +89,11 @@ for i in range(len(geocode_lookup_table)):
         continue
     print i, 'out of', num_items_to_geocode # to see progress
 
+    
+# Add in new results
+combine_results_df = pd.concat([old_geocode_lookup_table, keep_new_locations_df])
+    
 # Write to csv
-geocode_lookup_table.to_csv(output_file_path, index=False)
-'''
+combine_results_df.to_csv(output_file_path, index=False)
+
 
