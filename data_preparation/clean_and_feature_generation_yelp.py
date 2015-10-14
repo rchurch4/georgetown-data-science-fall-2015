@@ -29,15 +29,15 @@ import time
 import sys
 
 ################
-# USER-DEFINED - Set Data File Paths
+# Set Data File Paths (USER-DEFINED)
 #
 # Set the input data source and the output data
 # files as a string. Relative or absolute path
 # may be used. 
 ################
 
-input_data_path = 'data/yelp_dc_pilot_2.csv'
-output_data_path = 'data/yelp_dc_pilot_2_added_features.csv'
+input_data_path = 'data/yelp_dc_1.csv'
+output_data_path = 'data/yelp_dc_1_cleaned_features.csv'
 
 ################
 # Data loading
@@ -191,7 +191,7 @@ def make_user_rating_mean_for_restaurant_yelp_non_local():
     print 'make_user_rating_mean_for_restaurant_yelp_non_local() is complete'
 
 '''    
-having issues with sd (probably caused by missing values)
+having issues with sd (probably caused by missing values). holding off for now. 
     
 def make_user_rating_sd_for_restaurant_yelp():
     # Generates:
@@ -252,11 +252,13 @@ if False: # aggregate sd yelp ratings
 # Check out results
 ################
 
-print d.head(10)
+#print d.head(10)
 
 ################
 # Save results
 ################
 
 d.to_csv(output_data_path, index=False)
+
+print input_data_path, 'cleaned and features added' # success message
 
