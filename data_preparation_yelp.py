@@ -32,7 +32,7 @@
 # Script Dependencies:
 #   json_to_csv_yelp.py
 #   update_geocode_lookup_table.py
-#   clean_and_feature_generation_yelp_multiple.py
+#   clean_and_feature_generation_yelp.py
 #
 # File Dependencies:
 #   geocode_lookup_table.csv
@@ -41,7 +41,7 @@
 
 import os
 import sys
-sys.path.insert(0, './data_preparation/yelp/lib') # from github folder root
+sys.path.insert(0, './data_preparation_lib') # from github folder root
 from json_to_csv_yelp import json_to_csv_yelp
 from update_geocode_lookup_table import update_geocode_lookup_table
 from clean_and_feature_generation_yelp import clean_and_feature_generation_yelp
