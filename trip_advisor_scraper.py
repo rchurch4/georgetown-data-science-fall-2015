@@ -71,7 +71,11 @@ def parse_review_page(html, offset):
 	except:
 		next_url = None
 
-	review_boxes = soup.find('div',id='REVIEWS').find_all('div',{'class':'reviewSelector'})
+	review_boxes = []
+	try:
+		review_boxes = soup.find('div',id='REVIEWS').find_all('div',{'class':'reviewSelector'})
+	except:
+		pass
 	reviews = []
 	cnt = offset-10
 	for rb in review_boxes:
@@ -149,7 +153,7 @@ def parse_trip_advisor(datadir,step_cleared):
 			with open(datadir+city_list[c]+'_basic_list.json','r') as f:
 				city_restaurants = json.load(f)
 			restaurant_reviews = []
-			num_files = 1
+			num_files = 13
 			completed = (num_files*20) +1
 			for r in city_restaurants[completed:]:
 				print r[1]
