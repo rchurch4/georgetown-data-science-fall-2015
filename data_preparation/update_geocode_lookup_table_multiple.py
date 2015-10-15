@@ -1,74 +1,86 @@
+################
+# update_geocode_lookup_table_multiple.py
+# Version 3
+# Python 2
+#
+# Description:
+# This script updates the geocode lookup table to include
+# any locations in the input data sources.  
+#
+# Input Details:
+# yelp data csv files. 
+#
+# Output Details:
+# An updated geocode lookup table as a csv. 
+#
+# File Dependencies:
+#   input_file_path (user-defined)
+#   old_lookup_table = (user-defined)
+#
+################
+
 import pandas as pd
 import numpy as np
-import os
+# import os
 from geopy.geocoders import Nominatim
 from geopy.distance import vincenty
 import time
 import sys
 
 ################
-# USER-DEFINED - Set Data File Paths
+# Set Data File Paths (USER-DEFINED)
 #
-# Set the input data source and the output data
-# files as a string. Relative or absolute path
-# may be used. 
+# Instructions: 
+# Set the input data sources and the output data
+# paths as a string. It is recommended to use an
+# output path that does not overwrite the previous
+# lookup table. Instead, it is recommended to
+# manually check that the new results are satisfactory
+# first, and then manually delete the previous 
+# lookup table and rename the new one to the usual
+# lookup table name - 'data/geocode_lookup_table.csv'.
+# In either case, the updated lookup table should 
+# eventually be named 'data/geocode_lookup_table.csv'
+# so that this script and 'clean_and_feature_generation.py'
+# reference the most recent lookup table. 
 ################
 
-input_file_paths = ['data/yelp_dc_8.csv', 'data/yelp_dc_9.csv']
+input_file_paths = ['data/yelp_dc_10.csv', 'data/yelp_dc_11.csv']
 output_file_path = 'data/geocode_lookup_table_new.csv' 
-#       better not to overwrite geocode_lookup_table.csv
-#       better to manually rename after, since that
-#       file also gets read in by script. 
-old_lookup_table = 'data/geocode_lookup_table.csv'
-#       old_lookup_table should stay the same unless
-#       testing is being done. 
+#       see instructions above
+old_lookup_table_path = 'data/geocode_lookup_table.csv'
+#       old_lookup_table should stay the same. 
 
 ################
 # Update geocodes 
 ################
 
-# Grab all locations from all input_file_paths
-
-all_new_locations = []
-for i, current_file_name in enumerate(input_file_paths):
-    print i, current_file_name
-    current_file = pd.read_csv(current_file_name, header = 0)
-    print type(current_file)
-    print current_file
-
-
-
-'''
-
-################
-# Update geocodes 
-################
-
-# Read in current geocode lookup table
-old_geocode_lookup_table = pd.read_csv(old_lookup_table)
-# Read in input data source
-new_data = pd.read_csv(input_file_path)
-
-# Get the locations from old geocode table
-old_data_locations = old_geocode_lookup_table.user_location
-# Get the locations from input data source
-new_data_locations = new_data.user_location.unique()
-# Only keep locations that aren't in old lookup table
-keep_new_locations = list(set(new_data_locations) - set(old_data_locations))
-# Make data frame for new locations
-keep_new_locations_df = pd.DataFrame({'user_location' : keep_new_locations})
-
-# Heads up on size
-num_items_to_geocode = len(keep_new_locations_df)
+# Grab all locations from all input_file_paths.
+all_input_locations = pd.Series()
+for i, current_input_file_name in enumerate(input_file_paths):
+    #print i, current_input_file_name
+    current_input_file = pd.read_csv(current_input_file_name, header = 0)
+    all_input_locations = pd.concat([all_input_locations, current_input_file.user_location])
+# Keep only unique input locations. 
+unique_input_locations = all_input_locations.unique()
+# Remove any unique input locations for which we
+# already have the geocode in old_lookup_table. 
+old_lookup_table = pd.read_csv(old_lookup_table_path, header=0)
+old_lookup_table_locations = old_lookup_table.user_location
+unique_input_locations_to_add = list(set(unique_input_locations) - set(old_lookup_table_locations))
+# Heads up on number of items to geocode
+num_items_to_geocode = len(unique_input_locations_to_add)
 print 'items to geocode:', num_items_to_geocode
+# Set up df for unique_input_locations_to_add
+new_only_lookup_table = pd.DataFrame({'user_location':unique_input_locations_to_add})
 
-# Get geocodes for unique cities
-for i in range(len(keep_new_locations_df)): 
+# Geocode time!
+for i in range(len(new_only_lookup_table)):
     try:
         geolocator = Nominatim()
-        current_geocode = geolocator.geocode(keep_new_locations_df.loc[i, 'user_location'], timeout=10)
-        keep_new_locations_df.loc[i, 'user_latitude'] = current_geocode.latitude
-        keep_new_locations_df.loc[i, 'user_longitude'] = current_geocode.longitude
+        current_geocode = geolocator.geocode(new_only_lookup_table.loc[i, 'user_location'], timeout=10)
+        new_only_lookup_table.loc[i, 'user_latitude'] = current_geocode.latitude
+        new_only_lookup_table.loc[i, 'user_longitude'] = current_geocode.longitude
         time.sleep(1.25)
             # at least 1 second delay - http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy
     except: 
@@ -76,16 +88,15 @@ for i in range(len(keep_new_locations_df)):
         #       that is causing the occasional exception to be
         #       thrown. One possible solution to this would be to
         #       extract one city (use comma delimiter) and try
-        #       geocoding again before moving on. 
+        #       geocoding again before moving on. Will try this
+        #       in phase 2 of the project, since it's a matter of
+        #       cleanliness of the input location data. 
         print i, 'exception thrown', sys.exc_info()
         continue
-    print i, 'out of', num_items_to_geocode # to see progress
+    print i+1, 'out of', num_items_to_geocode # to see progress    
 
-    
-# Add in new results
-combine_results_df = pd.concat([old_geocode_lookup_table, keep_new_locations_df])
-
+# Combine with old geocode table
+combined_lookup_table = pd.concat([old_lookup_table, new_only_lookup_table])
 # Write to csv
-combine_results_df.to_csv(output_file_path, index=False)
-
-'''
+combined_lookup_table.to_csv(output_file_path, index=False)
+print "geocode lookup table update complete"

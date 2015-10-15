@@ -19,20 +19,20 @@
 # File Dependencies:
 #   input_file_path (user-defined)
 #
-# References:
-#   1) Loading json into csv. 
-#      http://stackoverflow.com/questions/13938183/python-json-string-to-list-of-dictionaries-getting-error-when-iterating
-#
 ################
 
 import json
 import csv
 
 ################
-# Set file paths (user-defined)
+# Set Data File Paths (USER-DEFINED)
+# 
+# input_file_paths should be given as a list of strings.
+# output_file_paths will be created automatically, changing
+# .json extension to .csv extension. 
 ################
-input_file_path = 'data/yelp_dc_9.json'
-output_file_path = 'data/yelp_dc_9.csv'
+input_file_path = 'data/yelp_dc_11.json'
+output_file_path = 'data/yelp_dc_11.csv'
 
 # Read in scraped data from json input. 
 with file(input_file_path, 'r') as yelp_input_file:
