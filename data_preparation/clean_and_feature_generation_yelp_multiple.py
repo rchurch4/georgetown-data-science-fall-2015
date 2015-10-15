@@ -53,15 +53,14 @@ import sys
 # Optional - dynamically generate input file paths
 
 make_input_file_paths = []
-start_num = 10 # user-defined
+start_num = 0 # user-defined
 end_num = 19 # user-defined
 for i in range(start_num, end_num + 1):
-    path_root = 'data/yelp_dc_' # user-defined
+    path_root = 'data/yelp_nsh_' # user-defined
     path_ending = '.csv' # user-defined
     current_path = path_root + str(i) + path_ending
     make_input_file_paths.append(current_path)
 
-make_input_file_paths.append('data/yelp_dc_0.csv')
 ####    
 # Mandatory - Set paths
 input_file_paths = make_input_file_paths # user-defined
