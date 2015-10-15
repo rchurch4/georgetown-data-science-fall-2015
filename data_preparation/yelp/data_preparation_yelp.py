@@ -5,7 +5,20 @@
 # This script takes json files generated from
 # scraping yelp as an input, and in the end 
 # delivers csvs that add features in and also
-# do some data cleaning. 
+# do some data cleaning. Along the way,
+# one more csv per json is created before the
+# features are added. And, the geocode lookup
+# table is also updated with any new locations
+# in the input data files.  
+# 
+# How to run
+# From the shell:
+#   1) Navigate to root of github folder.
+#      The reason for maintaining this structure is because
+#      this script depends on data files that are located in
+#      './data'. Also, this script imports some custom
+#      functions that are in './data_preparation/yelp/lib'.
+#   2) python data_preparation/yelp/data_preparation_yelp.py
 #
 # Data preparation is done in three steps:
 #   1) Converts json to csv, making each row of the
@@ -23,8 +36,16 @@
 #
 # File Dependencies:
 #   geocode_lookup_table.csv
-#   Files specified in variable: input_data_path
+#   Files specified below in variable: 
+#       input_data_path
 
+import os
+import sys
+sys.path.insert(0, './data_preparation/yelp/lib') # from github folder root
+from json_to_csv_yelp import json_to_csv_yelp
+from update_geocode_lookup_table import update_geocode_lookup_table
+from clean_and_feature_generation_yelp import clean_and_feature_generation_yelp
+from change_extension_to_csv import change_extension_to_csv
 
 ################
 # Set Data File Paths (USER-DEFINED)
@@ -69,9 +90,11 @@ for i in range(start_num, end_num + 1):
 '''
 ####    
 # Mandatory - Set paths
-input_file_paths = ['data/yelp_dc_1.json', 'data/yelp_dc_2.json']
+input_file_paths = ['data/yelp_nsh_20.json']
+
 
 ################
+# Proceed with user prompt, then data preparation sequence
 ################
 
 # Warn user about possibly overwriting csvs.
@@ -86,12 +109,17 @@ while True:
         print 'Aborting data preparation sequence.'
         break
     elif user_proceed_response.lower() == 'y':
-        print 'Starting data preparation sequence.'
+        
+        print '\nStarting data preparation sequence. \n'
 
         # json to csv conversion
+        json_to_csv_yelp(input_file_paths)
         
         # update geocode lookup table
+        input_file_paths_csv = change_extension_to_csv(input_file_paths)
+        update_geocode_lookup_table(input_file_paths_csv)
         
         # add features and do some data cleaning
+        clean_and_feature_generation_yelp(input_file_paths_csv)
 
         break # exit user prompt loop
