@@ -39,6 +39,7 @@ import csv
 
 ####
 # Optional - dynamically generate input file paths
+'''
 make_input_file_paths = []
 start_num = 0 # user-defined
 end_num = 13 # user-defined
@@ -47,6 +48,7 @@ for i in range(start_num, end_num + 1):
     path_ending = '.json' # user-defined
     current_path = path_root + str(i) + path_ending
     make_input_file_paths.append(current_path)
+'''
 ####    
 # Mandatory - Set paths
 input_file_paths = make_input_file_paths # user defined
