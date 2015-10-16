@@ -1,4 +1,4 @@
-################
+# Ravi Makhija
 # json_to_csv_yelp.py
 # Version 4
 # Python 2
@@ -9,7 +9,6 @@
 # but organized so that each observation is a review. The script
 # also encodes string inputs as UTF-8.  
 # This function is used in data_preparation_trip_advisor.py. 
-################
 
 import json
 import csv

@@ -1,42 +1,33 @@
+# Ravi Makhija
 # data_preparation_trip_advisor.py
-# Version 4.1
+# Version 4.2
 #
 # Description:
-# This script takes json files generated from
-# scraping TRIP ADVISOR as an input, and in the end 
-# delivers csvs that add features in and also
-# do some data cleaning. Along the way,
-# one more csv per json is created before the
-# features are added. And, the geocode lookup
-# table is also updated with any new locations
-# in the input data files. Please also note that
-# the city for the input data has to be defined
-# by the user at run time (there will be a user
-# prompt).
-# 
-# How to run:
-# From the shell:
-#   python data_preparation_trip_advisor.py
-#
-# Data preparation is done in three steps:
+# This script takes as input the json files generated
+# from scraping TRIP ADVISOR, and initiates the following
+# data preparation sequence: 
 #   1) Converts json to csv, making each row of the
 #      csv a unique review with restaurant info merged
 #      in. 
 #   2) Updates geocode lookup table with any new
 #      geocodes required. 
 #   3) Adds extra features to the data set and does
-#      some data cleaning along the way. 
+#      some data cleaning along the way, outputting
+#      a final csv. 
+# 
+# Run from shell:
+#   python data_preparation_trip_advisor.py
+# 
+# File Dependencies:
+#   data/geocode_lookup_table.csv
+#   data/Washington_DC_District_of_Columbia_basic_list.json
+#   input_file_paths (specified as variable in script)
 #
 # Script Dependencies:
 #   data_preparation_lib/json_to_csv_trip_advisor.py
 #   data_preparation_lib/update_geocode_lookup_table.py
 #   data_preparation_lib/clean_and_feature_generation_trip_advisor.py
-#
-# File Dependencies:
-#   data/geocode_lookup_table.csv
-#   data/Washington_DC_District_of_Columbia_basic_list.json
-#   Files specified below in variable: 
-#       input_data_path
+#   data_preparation_lib/change_extension_to_csv
 #
 # References:
 #   Problem: Importing functions from other files for use in this script. 

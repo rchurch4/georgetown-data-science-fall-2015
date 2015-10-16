@@ -1,4 +1,4 @@
-################
+# Ravi Makhija
 # clean_and_feature_generation_trip_advisor.py
 # Version 4
 # Python 2
@@ -22,7 +22,6 @@
 # References used:
 # For checking for missing value:
 #   http://stackoverflow.com/questions/944700/how-to-check-for-nan-in-python
-################
 
 import pandas as pd
 import numpy as np

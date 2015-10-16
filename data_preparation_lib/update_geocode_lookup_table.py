@@ -1,4 +1,4 @@
-################
+# Ravi Makhija
 # update_geocode_lookup_table.py
 # Version 4
 # Python 2
@@ -10,7 +10,6 @@
 # References:
 #   geopy documentation: 
 #       https://pypi.python.org/pypi/geopy
-################
 
 import pandas as pd
 import numpy as np

@@ -1,4 +1,4 @@
-################
+# Ravi Makhija
 # json_to_csv_trip_advisor.py
 # Version 4
 # Python 2
@@ -12,7 +12,6 @@
 # first part of this code creates a dictionary from that, and this gets
 # pulled in while creating the observations of the output data set. 
 # This function is used in data_preparation_trip_advisor.py. 
-################
 
 import json
 import csv

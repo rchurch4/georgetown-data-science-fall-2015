@@ -1,4 +1,4 @@
-################
+# Ravi Makhija
 # clean_and_feature_generation_yelp.py
 # Version 4
 # Python 2
@@ -24,7 +24,6 @@
 #       http://stackoverflow.com/questions/12200693/python-pandas-how-to-assign-groupby-operation-results-back-to-columns-in-parent
 #   pandas tutorial
 #       http://pandas.pydata.org/pandas-docs/stable/10min.html#min
-################
 
 import pandas as pd
 import numpy as np
