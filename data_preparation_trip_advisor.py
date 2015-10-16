@@ -9,16 +9,14 @@
 # one more csv per json is created before the
 # features are added. And, the geocode lookup
 # table is also updated with any new locations
-# in the input data files.  
+# in the input data files. Please also note that
+# the city for the input data has to be defined
+# by the user at run time (there will be a user
+# prompt).
 # 
-# How to run
+# How to run:
 # From the shell:
-#   1) Navigate to root of github folder.
-#      The reason for maintaining this structure is because
-#      this script depends on data files that are located in
-#      './data'. Also, this script imports some custom
-#      functions that are in './data_preparation/trip_advisor/lib'.
-#   2) python data_preparation/trip_advisor/data_preparation_trip_advisor.py
+#   python data_preparation_trip_advisor.py
 #
 # Data preparation is done in three steps:
 #   1) Converts json to csv, making each row of the
@@ -44,7 +42,7 @@ import sys
 sys.path.insert(0, './data_preparation_lib') # from github folder root
 from json_to_csv_trip_advisor import json_to_csv_trip_advisor
 from update_geocode_lookup_table import update_geocode_lookup_table
-from clean_and_feature_generation_trip_advisor import clean_and_feature_generation_trip_advisor
+#from clean_and_feature_generation_trip_advisor import clean_and_feature_generation_trip_advisor
 from change_extension_to_csv import change_extension_to_csv
 
 ################
@@ -78,19 +76,20 @@ from change_extension_to_csv import change_extension_to_csv
 
 ####
 # Optional - dynamically generate input file paths
-'''
+
 make_input_file_paths = []
-start_num = 10 # user-defined
-end_num = 19 # user-defined
+start_num = 0 # user-defined
+end_num = 41 # user-defined
 for i in range(start_num, end_num + 1):
-    path_root = 'data/yelp_dc_' # user-defined
-    path_ending = '.csv' # user-defined
+    path_root = 'data/Washington_DC_District_of_Columbia_review_list' # user-defined
+    path_ending = '.json' # user-defined
     current_path = path_root + str(i) + path_ending
     make_input_file_paths.append(current_path)
-'''
+
 ####    
 # Mandatory - Set paths
-input_file_paths = ['data/Washington_DC_District_of_Columbia_review_list0.json']
+#input_file_paths = ['data/Washington_DC_District_of_Columbia_review_list40.json']
+input_file_paths = make_input_file_paths
 
 ################
 # Proceed with user prompt, then data preparation sequence
@@ -98,27 +97,30 @@ input_file_paths = ['data/Washington_DC_District_of_Columbia_review_list0.json']
 
 # Warn user about possibly overwriting csvs.
 # Uses a loop to ensure valid input.
-current_user_prompt = "This script will overwrite any csv files with the same name. Therefore, you should make sure that input_file_path is correct in the script before running. Do you want to proceed with running the script? (Y/N): "
+current_user_prompt = "\nThis script will overwrite any csv files with the same name. Therefore, you should make sure that input_file_path is correct in the script before running. \n\nTo proceed, type either 'DC' or 'Nashville' depending on your input data. Otherwise, type 'q' to abort: "
 while True:
     user_proceed_response = raw_input(current_user_prompt)
-    if user_proceed_response.lower() != 'y' and user_proceed_response.lower() != 'n':
-        print '\nPlease enter "Y" for Yes and "N" for No. No other responses will be accepted. \n'
-        current_user_prompt = "Do you want to proceed with running the script? (Y/N): "
-    elif user_proceed_response.lower() == 'n':
+    if user_proceed_response.lower() != 'dc' and user_proceed_response.lower() != 'nashville' and user_proceed_response.lower() != 'q':
+        current_user_prompt = '\nPlease enter one of "DC", "Nashville", or "q": '
+    elif user_proceed_response.lower() == 'q':
         print 'Aborting data preparation sequence.'
         break
-    elif user_proceed_response.lower() == 'y':
+    elif user_proceed_response.lower() == 'dc' or user_proceed_response.lower() == 'nashville':
+        if user_proceed_response.lower() == 'dc':
+            my_restaurant_location = 'Washington, DC'
+        elif user_proceed_response.lower() == 'nashville':
+            my_restaurant_location = 'Nashville, TN'
         
         print '\nStarting data preparation sequence. \n'
 
         # json to csv conversion
-        json_to_csv_trip_advisor(input_file_paths)
+        json_to_csv_trip_advisor(input_file_paths, my_restaurant_location)
         
         # update geocode lookup table
         input_file_paths_csv = change_extension_to_csv(input_file_paths)
         update_geocode_lookup_table(input_file_paths_csv)
         
         # add features and do some data cleaning
-        clean_and_feature_generation_trip_advisor(input_file_paths_csv)
+        #clean_and_feature_generation_trip_advisor(input_file_paths_csv)
 
         break # exit user prompt loop
