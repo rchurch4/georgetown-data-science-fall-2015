@@ -1,5 +1,5 @@
 # data_preparation_yelp.py
-# Version 4
+# Version 4.1
 #
 # Description:
 # This script takes json files generated from
@@ -50,32 +50,13 @@ from clean_and_feature_generation_yelp import clean_and_feature_generation_yelp
 from change_extension_to_csv import change_extension_to_csv
 
 ################
-# Begin USER-DEFINED Section
-################
-################
-# Set Data File Paths
+# Set Data File Paths (User-defined)
 # 
 # Details: 
 # input_file_paths should be given as a list of strings.
 # 
 # There is also an optional section to dynamically generate
 # file names, if they are structured as 'root_#_ending'.
-# 
-# Example 1:
-# # Manually specify input_file_paths
-# input_file_paths = ['data/yelp_dc_1.json', 'data/yelp_dc_2.json']
-# 
-# Example 2:
-# # Dynamically generate input_file_paths
-# make_input_file_paths = []
-# start_num = 1 # user-defined
-# end_num = 19 # user-defined
-# for i in range(start_num, end_num + 1):
-#     path_root = 'data/yelp_dc_' # user-defined
-#     path_ending = '.csv' # user-defined
-#     current_path = path_root + str(i) + path_ending
-#     make_input_file_paths.append(current_path)
-# input_file_paths = make_input_file_paths
 ################
 
 ####
@@ -94,11 +75,6 @@ for i in range(start_num, end_num + 1):
 # Mandatory - Set paths
 input_file_paths = ['data/yelp_dc_1.json', 'data/yelp_dc_2.json']
 #input_file_paths = make_input_file_paths # use this if dynamically generating file paths
-
-################
-# End USER-DEFINED Section
-################
-
 
 ################
 # We proceed with a user prompt, then the data preparation sequence
