@@ -97,7 +97,7 @@ input_file_paths = make_input_file_paths
 
 # Warn user about possibly overwriting csvs.
 # Uses a loop to ensure valid input.
-current_user_prompt = "\nThis script will overwrite any csv files with the same name. Therefore, you should make sure that input_file_path is correct in the script before running. \n\nTo proceed, type either 'DC' or 'Nashville' depending on your input data. Otherwise, type 'q' to abort: "
+current_user_prompt = "\nThis script will overwrite any csv files with the same name. Therefore, you should make sure that input_file_paths is correct in the script before running. \n\nTo proceed, type either 'DC' or 'Nashville' depending on your input data. Otherwise, type 'q' to abort: "
 while True:
     user_proceed_response = raw_input(current_user_prompt)
     if user_proceed_response.lower() != 'dc' and user_proceed_response.lower() != 'nashville' and user_proceed_response.lower() != 'q':

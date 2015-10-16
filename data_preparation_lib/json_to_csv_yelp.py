@@ -12,7 +12,7 @@
 import json
 import csv
 
-def json_to_csv_yelp(input_file_paths):
+def json_to_csv_yelp(input_file_paths, my_restaurant_location):
     # input: 
     #   input_file_paths
     #       takes the input file paths as a list of strings.
@@ -42,7 +42,7 @@ def json_to_csv_yelp(input_file_paths):
 
         # Prepare final header (but, will need to rename some input dictionary keys)
         yelp_data_header = {'restaurant_name': None,
-                            'restaurant_location': 'Washington, DC',
+                            'restaurant_location': my_restaurant_location,
                             'restaurant_overall_rating': None,
                             'restaurant_num_reviews': None,
                             'restaurant_url': None,
@@ -62,7 +62,7 @@ def json_to_csv_yelp(input_file_paths):
             for j, current_review in enumerate(current_restaurant['reviews']):
                 # Form current_observation
                 current_observation = {'restaurant_name': current_restaurant['name'].encode('utf-8').strip(),
-                                       'restaurant_location': 'Washington, DC',
+                                       'restaurant_location': my_restaurant_location,
                                        'restaurant_overall_rating': current_restaurant['rating'],
                                        'restaurant_num_reviews': current_restaurant['num_reviews'],
                                        'restaurant_url': current_restaurant['url'].strip(),
