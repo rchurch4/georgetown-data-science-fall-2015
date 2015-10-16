@@ -28,12 +28,12 @@
 #      some data cleaning along the way. 
 #
 # Script Dependencies:
-#   json_to_csv_yelp.py
-#   update_geocode_lookup_table.py
-#   clean_and_feature_generation_yelp.py
+#   data_preparation_lib/json_to_csv_yelp.py
+#   data_preparation_lib/update_geocode_lookup_table.py
+#   data_preparation_lib/clean_and_feature_generation_yelp.py
 #
 # File Dependencies:
-#   geocode_lookup_table.csv
+#   data/geocode_lookup_table.csv
 #   Files specified below in variable: 
 #       input_data_path
 
@@ -46,13 +46,13 @@ from clean_and_feature_generation_yelp import clean_and_feature_generation_yelp
 from change_extension_to_csv import change_extension_to_csv
 
 ################
-# Set Data File Paths (USER-DEFINED)
+# Begin USER-DEFINED Section
+################
+################
+# Set Data File Paths
 # 
 # Details: 
 # input_file_paths should be given as a list of strings.
-# output_file_paths will be created automatically, changing
-# .json extension to .csv extension, and appending 
-# '_cleaned_features' for the final output files. 
 # 
 # There is also an optional section to dynamically generate
 # file names, if they are structured as 'root_#_ending'.
@@ -71,12 +71,12 @@ from change_extension_to_csv import change_extension_to_csv
 #     path_ending = '.csv' # user-defined
 #     current_path = path_root + str(i) + path_ending
 #     make_input_file_paths.append(current_path)
-# input_file_paths = make_input_file_paths # user-defined
+# input_file_paths = make_input_file_paths
 ################
 
 ####
 # Optional - dynamically generate input file paths
-
+'''
 make_input_file_paths = []
 start_num = 0 # user-defined
 end_num = 19 # user-defined
@@ -85,18 +85,30 @@ for i in range(start_num, end_num + 1):
     path_ending = '.json' # user-defined
     current_path = path_root + str(i) + path_ending
     make_input_file_paths.append(current_path)
-
+'''
 ####    
 # Mandatory - Set paths
-input_file_paths = make_input_file_paths
+input_file_paths = ['data/yelp_dc_1.json', 'data/yelp_dc_2.json']
+
+################
+# End USER-DEFINED Section
+################
 
 
 ################
-# Proceed with user prompt, then data preparation sequence
+# We proceed with a user prompt, then the data preparation sequence
 ################
 
 # Warn user about possibly overwriting csvs.
 # Uses a loop to ensure valid input.
+# Also, prompt the user to enter in the city that corresponds to
+# the restaurants in the input data. Since restaurant location is
+# not a field in the input data, this has to be set at run time,
+# and this also means all the input data should correspond to only
+# one restaurant location each time this script is run. 
+#
+# As a further note, at this stage, we only have data on DC and
+# Nashville, which is why only these two options are given. 
 current_user_prompt = "\nThis script will overwrite any csv files with the same name. Therefore, you should make sure that input_file_paths is set correctly in the script before running. \n\nTo proceed, type either 'DC' or 'Nashville' depending on your input data. Otherwise, type 'q' to abort: "
 while True:
     user_proceed_response = raw_input(current_user_prompt)

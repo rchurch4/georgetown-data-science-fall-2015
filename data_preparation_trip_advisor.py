@@ -28,12 +28,13 @@
 #      some data cleaning along the way. 
 #
 # Script Dependencies:
-#   json_to_csv_trip_advisor.py
-#   update_geocode_lookup_table.py
-#   clean_and_feature_generation_trip_advisor.py
+#   data_preparation_lib/json_to_csv_trip_advisor.py
+#   data_preparation_lib/update_geocode_lookup_table.py
+#   data_preparation_lib/clean_and_feature_generation_trip_advisor.py
 #
 # File Dependencies:
-#   geocode_lookup_table.csv
+#   data/geocode_lookup_table.csv
+#   data/Washington_DC_District_of_Columbia_basic_list.json
 #   Files specified below in variable: 
 #       input_data_path
 
@@ -42,7 +43,7 @@ import sys
 sys.path.insert(0, './data_preparation_lib') # from github folder root
 from json_to_csv_trip_advisor import json_to_csv_trip_advisor
 from update_geocode_lookup_table import update_geocode_lookup_table
-#from clean_and_feature_generation_trip_advisor import clean_and_feature_generation_trip_advisor
+from clean_and_feature_generation_trip_advisor import clean_and_feature_generation_trip_advisor
 from change_extension_to_csv import change_extension_to_csv
 
 ################
@@ -50,9 +51,6 @@ from change_extension_to_csv import change_extension_to_csv
 # 
 # Details: 
 # input_file_paths should be given as a list of strings.
-# output_file_paths will be created automatically, changing
-# .json extension to .csv extension, and appending 
-# '_cleaned_features' for the final output files. 
 # 
 # There is also an optional section to dynamically generate
 # file names, if they are structured as 'root_#_ending'.
@@ -79,7 +77,7 @@ from change_extension_to_csv import change_extension_to_csv
 
 make_input_file_paths = []
 start_num = 0 # user-defined
-end_num = 41 # user-defined
+end_num = 0 # user-defined
 for i in range(start_num, end_num + 1):
     path_root = 'data/Washington_DC_District_of_Columbia_review_list' # user-defined
     path_ending = '.json' # user-defined
@@ -121,6 +119,6 @@ while True:
         update_geocode_lookup_table(input_file_paths_csv)
         
         # add features and do some data cleaning
-        #clean_and_feature_generation_trip_advisor(input_file_paths_csv)
+        clean_and_feature_generation_trip_advisor(input_file_paths_csv)
 
         break # exit user prompt loop

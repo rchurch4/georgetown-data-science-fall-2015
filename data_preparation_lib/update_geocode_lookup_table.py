@@ -65,6 +65,7 @@ def update_geocode_lookup_table(input_file_paths):
         unique_input_locations_to_add = list(set(unique_input_locations) - set(old_lookup_table_locations))
         # Heads up on number of items to geocode
         num_items_to_geocode = len(unique_input_locations_to_add)
+        print 'starting geocoding for:', current_input_file_name
         print 'items to geocode:', num_items_to_geocode
 
         # Set up df for unique_input_locations_to_add
@@ -94,4 +95,4 @@ def update_geocode_lookup_table(input_file_paths):
         combined_lookup_table = pd.concat([old_lookup_table, new_only_lookup_table])
         # Write to csv
         combined_lookup_table.to_csv(output_file_path, index=False)
-        print "geocode lookup table update complete\n"
+        print "geocode lookup table update complete for,", current_input_file_name

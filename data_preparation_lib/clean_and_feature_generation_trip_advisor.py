@@ -1,9 +1,9 @@
-# clean_and_feature_generation_yelp.py
-# Version 1.2
+# clean_and_feature_generation_trip_advisor.py
+# Version 2
 #
 # Description:
 # Function to generate extra features. This is used in
-# data_preparation_yelp. 
+# data_preparation_trip_advisor. 
 # 
 # List of features generated:
     #   restaurant_latitude
@@ -13,9 +13,13 @@
     #   user_restaurant_distance   
     #   user_is_local    
     #   user_review_length    
-    #   mean_restaurant_rating_yelp
-    #   mean_restaurant_rating_yelp_local
-    #   mean_restaurant_rating_yelp_local	
+    #   mean_restaurant_rating_trip_advisor
+    #   mean_restaurant_rating_trip_advisor_local
+    #   mean_restaurant_rating_trip_advisor_local	
+#
+# References used:
+# For checking for missing value:
+#   http://stackoverflow.com/questions/944700/how-to-check-for-nan-in-python
 
 import pandas as pd
 import numpy as np
@@ -24,8 +28,9 @@ from geopy.geocoders import Nominatim
 from geopy.distance import vincenty
 import time
 import sys
+import math
 
-def clean_and_feature_generation_yelp(input_file_paths):
+def clean_and_feature_generation_trip_advisor(input_file_paths):
     # input: 
     #   input_file_paths
     #       takes the input file paths as a list of strings.
@@ -140,7 +145,9 @@ def clean_and_feature_generation_yelp(input_file_paths):
             
             distance_threshold = 50 # in miles
             for i in range(num_rows): 
-                if  d.loc[i, 'user_restaurant_distance'] <= distance_threshold:
+                if math.isnan(d.loc[i, 'user_restaurant_distance']):
+                    d.loc[i, 'user_is_local'] = np.NaN
+                elif d.loc[i, 'user_restaurant_distance'] <= distance_threshold:
                     d.loc[i, 'user_is_local'] = True
                 else:
                     d.loc[i, 'user_is_local'] = False
@@ -154,11 +161,11 @@ def clean_and_feature_generation_yelp(input_file_paths):
                 d.loc[i, 'user_review_length'] = len(d.loc[i, 'user_review']) 
             print 'make_user_review_length() is complete'
 
-        def make_user_rating_mean_for_restaurant_yelp(d):
+        def make_user_rating_mean_for_restaurant_trip_advisor(d):
             # Generates:
-            #   d.user_rating_mean_for_restaurant_yelp
+            #   d.user_rating_mean_for_restaurant_trip_advisor
             # Description:
-            #   Mean of all yelp user ratings in data set by restaurant. 
+            #   Mean of all trip_advisor user ratings in data set by restaurant. 
             # Input:
             #   The same dataframe all functions here are working with.
             #   for some reason, only the functions that use d.groupby
@@ -168,12 +175,12 @@ def clean_and_feature_generation_yelp(input_file_paths):
 
             mean_ratings = d.groupby('restaurant_name')['user_rating'].mean()
 
-            d = d.join(mean_ratings, on='restaurant_name', rsuffix='_mean_for_restaurant_yelp')
+            d = d.join(mean_ratings, on='restaurant_name', rsuffix='_mean_for_restaurant_trip_advisor')
             print 'make_user_rating_mean_for_restaurant_trip_advisor() is complete'
                 
-        def make_user_rating_mean_for_restaurant_yelp_local(d):
+        def make_user_rating_mean_for_restaurant_trip_advisor_local(d):
             # Generates:
-            #   d.user_rating_mean_for_restaurant_yelp_local
+            #   d.user_rating_mean_for_restaurant_trip_advisor_local
             # Input:
             #   The same dataframe all functions here are working with.
             #   for some reason, only the functions that use d.groupby
@@ -186,13 +193,13 @@ def clean_and_feature_generation_yelp(input_file_paths):
             #global d
             mean_ratings = d.groupby(['user_is_local', 'restaurant_name'])['user_rating'].mean()
             mean_ratings_local = mean_ratings[1] # there's surely a better way to do this
-            #d = d.join(mean_ratings, on=['user_is_local', 'restaurant_name'], rsuffix='_mean_for_restaurant_yelp_local')
-            d = d.join(mean_ratings_local, on=['restaurant_name'], rsuffix='_mean_for_restaurant_yelp_local')
+            #d = d.join(mean_ratings, on=['user_is_local', 'restaurant_name'], rsuffix='_mean_for_restaurant_trip_advisor_local')
+            d = d.join(mean_ratings_local, on=['restaurant_name'], rsuffix='_mean_for_restaurant_trip_advisor_local')
             print 'make_user_rating_mean_for_restaurant_trip_advisor_local() is complete'
             
-        def make_user_rating_mean_for_restaurant_yelp_non_local(d):
+        def make_user_rating_mean_for_restaurant_trip_advisor_non_local(d):
             # Generates:
-            #   d.user_rating_mean_for_restaurant_yelp_non_local
+            #   d.user_rating_mean_for_restaurant_trip_advisor_non_local
             # Input:
             #   The same dataframe all functions here are working with.
             #   for some reason, only the functions that use d.groupby
@@ -203,7 +210,7 @@ def clean_and_feature_generation_yelp(input_file_paths):
             #global d
             mean_ratings = d.groupby(['user_is_local', 'restaurant_name'])['user_rating'].mean()
             mean_ratings_non_local = mean_ratings[0]
-            d = d.join(mean_ratings_non_local, on=['restaurant_name'], rsuffix='_mean_for_restaurant_yelp_non_local')    
+            d = d.join(mean_ratings_non_local, on=['restaurant_name'], rsuffix='_mean_for_restaurant_trip_advisor_non_local')    
             print 'make_user_rating_mean_for_restaurant_trip_advisor_non_local() is complete'
             
         ################
@@ -221,10 +228,10 @@ def clean_and_feature_generation_yelp(input_file_paths):
             make_user_is_local()
         if False or global_main_switch: # review text-based features
             make_user_review_length()
-        if False or global_main_switch: # aggregate mean yelp ratings
-            make_user_rating_mean_for_restaurant_yelp(d)
-            make_user_rating_mean_for_restaurant_yelp_local(d)
-            make_user_rating_mean_for_restaurant_yelp_non_local(d)
+        if False or global_main_switch: # aggregate mean trip_advisor ratings
+            make_user_rating_mean_for_restaurant_trip_advisor(d)
+            make_user_rating_mean_for_restaurant_trip_advisor_local(d)
+            make_user_rating_mean_for_restaurant_trip_advisor_non_local(d)
             
         ################
         # Save results
