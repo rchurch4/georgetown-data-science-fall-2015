@@ -1,6 +1,6 @@
 ################
 # json_to_csv_yelp.py
-# Version 3
+# Version 4
 # Python 2
 #
 # Description:
@@ -8,6 +8,8 @@
 # json format, and outputs a csv file with the same information, 
 # but organized so that each observation is a review. The script
 # also encodes string inputs as UTF-8.  
+# This function is used in data_preparation_trip_advisor.py. 
+################
 
 import json
 import csv
@@ -15,8 +17,10 @@ import csv
 def json_to_csv_yelp(input_file_paths, my_restaurant_location):
     # input: 
     #   input_file_paths
-    #       takes the input file paths as a list of strings.
+    #       takes the input file paths as a list of string objects.
     #       these paths point to the scraped json yelp files. 
+    #   my_restaurant_location
+    #       for current input data sets, either DC or Nashville    
     # output: 
     #   One csv per json file is created. 
     # return

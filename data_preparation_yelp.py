@@ -1,5 +1,5 @@
 # data_preparation_yelp.py
-# Version 1
+# Version 4
 #
 # Description:
 # This script takes json files generated from
@@ -15,7 +15,7 @@
 # prompt).
 # 
 # How to run:
-# From the shell:
+#   From the shell:
 #   python data_preparation_yelp.py
 #
 # Data preparation is done in three steps:
@@ -36,6 +36,10 @@
 #   data/geocode_lookup_table.csv
 #   Files specified below in variable: 
 #       input_data_path
+#
+# References:
+#   Problem: Importing functions from other files for use in this script. 
+#      http://stackoverflow.com/questions/4383571/importing-files-from-different-folder-in-python
 
 import os
 import sys
@@ -89,6 +93,7 @@ for i in range(start_num, end_num + 1):
 ####    
 # Mandatory - Set paths
 input_file_paths = ['data/yelp_dc_1.json', 'data/yelp_dc_2.json']
+#input_file_paths = make_input_file_paths # use this if dynamically generating file paths
 
 ################
 # End USER-DEFINED Section

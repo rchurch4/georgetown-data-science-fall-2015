@@ -1,21 +1,30 @@
+################
 # clean_and_feature_generation_yelp.py
-# Version 1.2
+# Version 4
+# Python 2
 #
 # Description:
 # Function to generate extra features. This is used in
-# data_preparation_yelp. 
+# data_preparation_yelp.py. 
 # 
 # List of features generated:
-    #   restaurant_latitude
-    #   restaurant_longitude
-    #   user_latitude, 
-    #   user_longitude   
-    #   user_restaurant_distance   
-    #   user_is_local    
-    #   user_review_length    
-    #   mean_restaurant_rating_yelp
-    #   mean_restaurant_rating_yelp_local
-    #   mean_restaurant_rating_yelp_local	
+#   restaurant_latitude
+#   restaurant_longitude
+#   user_latitude, 
+#   user_longitude   
+#   user_restaurant_distance   
+#   user_is_local    
+#   user_review_length    
+#   mean_restaurant_rating_yelp
+#   mean_restaurant_rating_yelp_local
+#   mean_restaurant_rating_yelp_local
+#	
+# References:
+#   pandas join for aggregate: 
+#       http://stackoverflow.com/questions/12200693/python-pandas-how-to-assign-groupby-operation-results-back-to-columns-in-parent
+#   pandas tutorial
+#       http://pandas.pydata.org/pandas-docs/stable/10min.html#min
+################
 
 import pandas as pd
 import numpy as np
@@ -87,7 +96,6 @@ def clean_and_feature_generation_yelp(input_file_paths):
             #   d.restaurant_latitude
             #   d.restaurant_longitude
             
-            #global d
             # Assign geocode based on restaurant_location.
             # Since the number of cities we are investigating is
             # relatively small (definitely under 10 in the foreseeable
@@ -107,8 +115,6 @@ def clean_and_feature_generation_yelp(input_file_paths):
             # Generates: 
             #   d.user_latitude, 
             #   d.user_longitude
-            
-            #global d
             
             # Load in lookup table for geocodes
             geocode_lookup_table_df = pd.read_csv('data/geocode_lookup_table.csv')
@@ -135,7 +141,6 @@ def clean_and_feature_generation_yelp(input_file_paths):
             #   Uses the Vincenty distance formula to calculate distance between
             #   two points on a sphere, using the latitude and longitude. 
             
-            #global d
             for i in range(num_rows): 
                 restaurant_geocode = (d.loc[i, 'restaurant_latitude'], d.loc[i, 'restaurant_longitude'])
                 user_geocode = (d.loc[i, 'user_latitude'], d.loc[i, 'user_longitude'])
@@ -151,7 +156,6 @@ def clean_and_feature_generation_yelp(input_file_paths):
             # Description:
             #   User is considered local if he or she is within the distance_threshold.
             
-            #global d
             distance_threshold = 50 # in miles
             for i in range(num_rows): 
                 if  d.loc[i, 'user_restaurant_distance'] <= distance_threshold:
@@ -164,7 +168,6 @@ def clean_and_feature_generation_yelp(input_file_paths):
             # Generates:
             #   d.user_review_length
 
-            #global d
             for i in range(num_rows): # need to set this to len(d) later
                 d.loc[i, 'user_review_length'] = len(d.loc[i, 'user_review']) 
             print 'make_user_review_length() is complete'
@@ -182,10 +185,8 @@ def clean_and_feature_generation_yelp(input_file_paths):
             #   input.             
 
             mean_ratings = d.groupby('restaurant_name')['user_rating'].mean()
-            #global d
-            #mean_ratings = d.groupby('restaurant_name')['user_rating'].mean()
             d = d.join(mean_ratings, on='restaurant_name', rsuffix='_mean_for_restaurant_yelp')
-            #print 'make_user_rating_mean_for_restaurant_yelp() is complete'
+            print 'make_user_rating_mean_for_restaurant_yelp() is complete'
                 
         def make_user_rating_mean_for_restaurant_yelp_local(d):
             # Generates:
@@ -197,9 +198,9 @@ def clean_and_feature_generation_yelp(input_file_paths):
             #   have access to d already. that is the reasons for this
             #   input.             
             
-            # replace missing values with NaN
+            # replace missing values with NaN (don't need to do this currently)
             #d = d.applymap(lambda x: np.nan if isinstance(x, basestring) and x.isspace() else x)
-            #global d
+
             mean_ratings = d.groupby(['user_is_local', 'restaurant_name'])['user_rating'].mean()
             mean_ratings_local = mean_ratings[1] # there's surely a better way to do this
             #d = d.join(mean_ratings, on=['user_is_local', 'restaurant_name'], rsuffix='_mean_for_restaurant_yelp_local')
@@ -216,14 +217,13 @@ def clean_and_feature_generation_yelp(input_file_paths):
             #   have access to d already. that is the reasons for this
             #   input. 
 
-            #global d
             mean_ratings = d.groupby(['user_is_local', 'restaurant_name'])['user_rating'].mean()
             mean_ratings_non_local = mean_ratings[0]
             d = d.join(mean_ratings_non_local, on=['restaurant_name'], rsuffix='_mean_for_restaurant_yelp_non_local')    
             print 'make_user_rating_mean_for_restaurant_yelp_non_local() is complete'
             
         ################
-        # Run main methods
+        # Run 'closure' main methods
         ################
 
         global_main_switch = True # set to true to quickly run all main methods

@@ -1,5 +1,5 @@
 # change_extension_to_csv.py
-# Version 1
+# Version 4
 #
 # Description:
 # A function to convert the list of json file paths to
@@ -7,9 +7,9 @@
 
 def change_extension_to_csv(input_file_paths):
     # input
-    #   json file paths as list of strings
+    #   json file paths as list of string objects
     # return
-    #   corresponding csv file paths as list of strings
+    #   corresponding csv file paths as list of string objects
     
     input_file_paths_csv = []
     for current_input_file_path in input_file_paths:

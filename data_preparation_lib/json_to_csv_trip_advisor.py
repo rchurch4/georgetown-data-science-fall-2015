@@ -1,6 +1,6 @@
 ################
 # json_to_csv_trip_advisor.py
-# Version 3
+# Version 4
 # Python 2
 #
 # Description:
@@ -11,6 +11,8 @@
 # the restaurant information is included in a separate json file, so the
 # first part of this code creates a dictionary from that, and this gets
 # pulled in while creating the observations of the output data set. 
+# This function is used in data_preparation_trip_advisor.py. 
+################
 
 import json
 import csv
@@ -18,10 +20,11 @@ import csv
 def json_to_csv_trip_advisor(input_file_paths, my_restaurant_location):
     # input: 
     #   input_file_paths
-    #       takes the input file paths as a list of strings.
+    #       takes the input file paths as a list of string objects.
     #       these paths point to the scraped json trip_advisor files. 
     #   my_restaurant_location
     #       location of restaurants in current group of data sets
+    #       for current input data sets, either DC or Nashville
     # output: 
     #   One csv per json file is created. 
     # return
@@ -104,11 +107,11 @@ def json_to_csv_trip_advisor(input_file_paths, my_restaurant_location):
                               
         # Encode to unicode and strip white space
         # The error handling is mainly for missing data here.
-        # The data has to be encoded to unicode otherwie the
+        # The data has to be encoded to unicode otherwise the
         # subsequent csv export fails. It has to be done for
         # one cell at a time since even if one attribute is 
         # missing for one row, the rest of the string
-        # attributes for that row need to be encoded to
+        # attributes for that row still need to be encoded to
         # unicode. 
         # 
         # As a side note, this was not needed for Yelp, 

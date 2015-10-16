@@ -1,25 +1,28 @@
+################
 # clean_and_feature_generation_trip_advisor.py
-# Version 2
-#
+# Version 4
+# Python 2
+# 
 # Description:
 # Function to generate extra features. This is used in
-# data_preparation_trip_advisor. 
+# data_preparation_trip_advisor.py. 
 # 
 # List of features generated:
-    #   restaurant_latitude
-    #   restaurant_longitude
-    #   user_latitude, 
-    #   user_longitude   
-    #   user_restaurant_distance   
-    #   user_is_local    
-    #   user_review_length    
-    #   mean_restaurant_rating_trip_advisor
-    #   mean_restaurant_rating_trip_advisor_local
-    #   mean_restaurant_rating_trip_advisor_local	
+#   restaurant_latitude
+#   restaurant_longitude
+#   user_latitude, 
+#   user_longitude   
+#   user_restaurant_distance   
+#   user_is_local    
+#   user_review_length    
+#   mean_restaurant_rating_trip_advisor
+#   mean_restaurant_rating_trip_advisor_local
+#   mean_restaurant_rating_trip_advisor_local	
 #
 # References used:
 # For checking for missing value:
 #   http://stackoverflow.com/questions/944700/how-to-check-for-nan-in-python
+################
 
 import pandas as pd
 import numpy as np
@@ -207,7 +210,6 @@ def clean_and_feature_generation_trip_advisor(input_file_paths):
             #   have access to d already. that is the reasons for this
             #   input. 
 
-            #global d
             mean_ratings = d.groupby(['user_is_local', 'restaurant_name'])['user_rating'].mean()
             mean_ratings_non_local = mean_ratings[0]
             d = d.join(mean_ratings_non_local, on=['restaurant_name'], rsuffix='_mean_for_restaurant_trip_advisor_non_local')    

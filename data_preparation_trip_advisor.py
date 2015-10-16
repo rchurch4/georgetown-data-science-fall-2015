@@ -1,5 +1,5 @@
 # data_preparation_trip_advisor.py
-# Version 1
+# Version 4
 #
 # Description:
 # This script takes json files generated from
@@ -37,6 +37,10 @@
 #   data/Washington_DC_District_of_Columbia_basic_list.json
 #   Files specified below in variable: 
 #       input_data_path
+#
+# References:
+#   Problem: Importing functions from other files for use in this script. 
+#      http://stackoverflow.com/questions/4383571/importing-files-from-different-folder-in-python
 
 import os
 import sys
@@ -74,27 +78,39 @@ from change_extension_to_csv import change_extension_to_csv
 
 ####
 # Optional - dynamically generate input file paths
-
+'''
 make_input_file_paths = []
-start_num = 0 # user-defined
-end_num = 0 # user-defined
+start_num = 2 # user-defined
+end_num = 41 # user-defined
 for i in range(start_num, end_num + 1):
     path_root = 'data/Washington_DC_District_of_Columbia_review_list' # user-defined
     path_ending = '.json' # user-defined
     current_path = path_root + str(i) + path_ending
     make_input_file_paths.append(current_path)
-
+'''
 ####    
 # Mandatory - Set paths
-#input_file_paths = ['data/Washington_DC_District_of_Columbia_review_list40.json']
-input_file_paths = make_input_file_paths
+input_file_paths = ['data/Washington_DC_District_of_Columbia_review_list40.json']
+#input_file_paths = make_input_file_paths # use this if dynamically generating file paths
 
 ################
-# Proceed with user prompt, then data preparation sequence
+# End USER-DEFINED Section
+################
+
+################
+# We proceed with a user prompt, then the data preparation sequence
 ################
 
 # Warn user about possibly overwriting csvs.
 # Uses a loop to ensure valid input.
+# Also, prompt the user to enter in the city that corresponds to
+# the restaurants in the input data. Since restaurant location is
+# not a field in the input data, this has to be set at run time,
+# and this also means all the input data should correspond to only
+# one restaurant location each time this script is run. 
+#
+# As a further note, at this stage, we only have data on DC and
+# Nashville, which is why only these two options are given. 
 current_user_prompt = "\nThis script will overwrite any csv files with the same name. Therefore, you should make sure that input_file_paths is correct in the script before running. \n\nTo proceed, type either 'DC' or 'Nashville' depending on your input data. Otherwise, type 'q' to abort: "
 while True:
     user_proceed_response = raw_input(current_user_prompt)
