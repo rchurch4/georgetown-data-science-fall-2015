@@ -72,14 +72,20 @@ def update_geocode_lookup_table(input_file_paths):
                 time.sleep(1.25)
                     # at least 1 second delay - http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy
             except: 
-                # Note: Sometimes user_location is a few cities. I believe
-                #       that is causing the occasional exception to be
-                #       thrown. One possible solution to this would be to
-                #       extract one city (use comma delimiter) and try
-                #       geocoding again before moving on. Will try this
-                #       in phase 2 of the project, since it's a matter of
-                #       cleanliness of the input location data. 
-                print i, 'exception thrown', sys.exc_info()
+                # Occasionally an exception is thrown. This seems to be 
+                # caused by trying to access current_geocode.latitude when
+                # it does not exist. This attribute does not exist whenever
+                # Nominatim is not able to return a valid geocode when 
+                # a request is sent. 
+                #
+                # For yelp data, occasionally the user_location is given
+                # as a list of towns separated by commas. When this is the
+                # case, one possible fix would be to extract one city, 
+                # and send this as the request to Nominatim. If more data
+                # is needed, we can try this in phase 2 of the project. 
+                #
+                #print i, 'exception thrown', sys.exc_info()
+                print i, "skipped"
                 continue
             print i+1, 'out of', num_items_to_geocode # to see progress    
 

@@ -53,20 +53,20 @@ from change_extension_to_csv import change_extension_to_csv
 
 ####
 # Optional - dynamically generate input file paths
-'''
+
 make_input_file_paths = []
-start_num = 2 # user-defined
-end_num = 41 # user-defined
+start_num = 42 # user-defined
+end_num = 50 # user-defined
 for i in range(start_num, end_num + 1):
     path_root = 'data/Washington_DC_District_of_Columbia_review_list' # user-defined
     path_ending = '.json' # user-defined
     current_path = path_root + str(i) + path_ending
     make_input_file_paths.append(current_path)
-'''
+
 ####    
 # Mandatory - Set paths
-input_file_paths = ['data/Washington_DC_District_of_Columbia_review_list40.json']
-#input_file_paths = make_input_file_paths # use this if dynamically generating file paths above
+#input_file_paths = ['data/Washington_DC_District_of_Columbia_review_list40.json']
+input_file_paths = make_input_file_paths # use this if dynamically generating file paths above
 
 ################
 # We proceed with a user prompt, then the data preparation sequence

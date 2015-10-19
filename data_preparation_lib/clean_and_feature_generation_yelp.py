@@ -17,7 +17,7 @@
 #   user_review_length    
 #   mean_restaurant_rating_yelp
 #   mean_restaurant_rating_yelp_local
-#   mean_restaurant_rating_yelp_local
+#   mean_restaurant_rating_yelp_non_local
 #	
 # References:
 #   pandas join for aggregate: 

@@ -17,7 +17,7 @@
 #   user_review_length    
 #   mean_restaurant_rating_trip_advisor
 #   mean_restaurant_rating_trip_advisor_local
-#   mean_restaurant_rating_trip_advisor_local	
+#   mean_restaurant_rating_trip_advisor_non_local	
 #
 # References used:
 # For checking for missing value:
