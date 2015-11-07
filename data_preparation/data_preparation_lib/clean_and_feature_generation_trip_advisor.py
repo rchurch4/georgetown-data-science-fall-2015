@@ -52,7 +52,7 @@ def clean_and_feature_generation_trip_advisor(input_file_paths):
     for i, current_input_file_path in enumerate(input_file_paths):
 
         # Dynamically make output file paths
-        current_output_file_path = current_input_file_path.replace('.csv', '_cleaned_features_.csv')
+        current_output_file_path = current_input_file_path.replace('.csv', '_cleaned_features.csv')
         print "Current file: ", current_input_file_path
         
         ################
