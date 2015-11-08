@@ -1,0 +1,13 @@
+Notes on cleaning data - 2015-11-08 (Ravi)
+
+Data was cleaned and saved as data.table in two Rdata files:
+- yelp_data.Rdata
+- tripadvisor_data.Rdata
+
+Issues encountered along with solutions: 
+
+1) A small number of user reviews in the Yelp data set were broken up into multiple rows. This was likely caused by a newline or EOF character in the user review text data. Since this was a very rare event, these user reviews were skipped. (Example: observations 5418-5419  in yelp_dc_2_cleaned_features both correspond to the same review.)
+
+2) For TripAdvisor, the mean by restaurant aggregation variables were not created in the first phase of the project. So, these were created now. 
+
+3) For TripAdvisor, as we noticed earlier on, many of the user reviews do not have a location (or have an unrecognized location) and therefore are missing data for the user_is_local variable. I have ommitted these observations, since we are focusing on local vs. non-local. 
