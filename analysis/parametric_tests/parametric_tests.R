@@ -1,7 +1,7 @@
 ################
 # Parametric Analyses
 # Author: Ravi Makhija
-# Version 1.4
+# Version 1.5
 #
 # Description:
 # Parametric tests conducted on review data, including t-tests and logistic 
@@ -134,14 +134,14 @@ print(yelp_ttest)
 print(table(tripadvisor_data$user_is_local))
 
 # A cursory look at the mean for local and non_local ratings.
-# The mean for local TripAdvisor reviews is 4.222591, while the mean for 
-# non-local TripAdvisor reviews is 4.243421. A small difference. 
+# The mean for local TripAdvisor reviews is 4.031421, while the mean for 
+# non-local TripAdvisor reviews is 4.181742. A small difference. 
 
 print(tripadvisor_data[ , mean(user_rating), by=user_is_local])
 
 # Now, we conduct a t-test as we did for Yelp data. 
 
-# With a p-value of 0.0001664, we can see that there is indeed a statistically
+# With a p-value of 2.2e-16, we can see that there is indeed a statistically
 # significant difference between the local and non-local yelp user ratings, 
 # at the .05 significance level. We can also see this reflected in the 
 # confidence interval for the difference in ratings, which does not include 0.
@@ -337,12 +337,79 @@ tripadvisor_logit_2 <- glm(user_is_local ~ user_rating + user_num_reviews, data 
 print(summary(tripadvisor_logit_2))
 
 # Using a ROC curve, we see that for TripAdvisor, the ROC curve shows that
-# our model is only better than random for thresholds roughly below 0.5. Even
-# so, the ROC curve suggests that the TripAdvisor model considered here is not
-# good from a predictive standpoint. 
+# our model is better than random for most thresholds, with the exception being
+# at high values for specificity. But again, the AUC is not great, and suggests
+# only that our features here add some predictive power, but are far from
+# predicting well. 
 
 tripadvisor_prob=predict(tripadvisor_logit_2,type=c("response"))
 tripadvisor_data$prob=tripadvisor_prob
 tripadvisor_roc <- roc(user_is_local ~ prob, data = tripadvisor_data)
 plot(tripadvisor_roc,
      main = "ROC Curve for TripAdvisor Logistic Regression Model")
+
+# Next, we look at a confusion matrix. This time, we see that the TNR is great,
+# while the TPR is quite horrific. This, again, seems do be due to a class
+# imbalance. For TripAdvisor, the class imbalanace is in favor of non_local
+# users, which is why the confusion matrix this time favors FPR over TPR, 
+# due to the way local vs. non-local is coded. 
+
+p <- nrow(tripadvisor_data[user_is_local == TRUE])
+tp <- sum(tripadvisor_data[user_is_local == TRUE]$prob > .5)
+fp <- p - tp
+n <- nrow(tripadvisor_data[user_is_local == FALSE])
+tn <- sum(tripadvisor_data[user_is_local == FALSE]$prob <= .5)
+fn <- n - tn
+
+tripadvisor_confusion_matrix <- matrix(c(tp/p, 1 - tp/p, 1-tn/n, tn/n), nrow=2)
+colnames(tripadvisor_confusion_matrix) <- c("local_observed", "non_local_observed")
+rownames(tripadvisor_confusion_matrix) <- c("local_predicted", "non_local_predicted")
+
+print(tripadvisor_confusion_matrix)
+
+# Here, a quick look at the class imbalance. The proportion of reviews that
+# are from non-local reviewers is 0.7197191. This, of course, makes sense as
+# well, given that TripAdvisor seems to be geared towards the person planning
+# a trip. 
+
+table(tripadvisor_data$user_is_local)
+
+# We finish by again using cross-validation to come up with a prediction
+# accuracy statistic for our the TripAdvisor model. 
+
+set.seed(1)
+num_folds <- 5
+n <- nrow(tripadvisor_data)
+fold_n <- floor(n/num_folds)
+tripadvisor_data_shuffled <- copy(tripadvisor_data)[sample(1:n), ]
+tripadvisor_cv_results <- numeric(num_folds)
+
+for (i in 1:num_folds) {
+  if (i != num_folds) {
+    fold_start_index <- (i-1)*fold_n + 1
+    fold_end_index <- i*fold_n
+    current_lm <- glm(user_is_local ~ user_rating + user_num_reviews + user_review_length, data = tripadvisor_data[!(fold_start_index:fold_end_index)], family = "binomial")
+    current_prob=predict(current_lm,type=c("response"), newdata=tripadvisor_data[fold_start_index:fold_end_index])
+    current_accuracy <- sum(tripadvisor_data[fold_start_index:fold_end_index]$user_is_local == (current_prob > .5))/length(current_prob)
+    tripadvisor_cv_results[i] <- current_accuracy
+  }
+  else {
+    fold_start_index <- (i-1)*fold_n + 1
+    fold_end_index <- n
+    current_lm <- glm(user_is_local ~ user_rating + user_num_reviews + user_review_length, data = tripadvisor_data[!(fold_start_index:fold_end_index)], family = "binomial")
+    current_prob=predict(current_lm,type=c("response"), newdata=tripadvisor_data[fold_start_index:fold_end_index])
+    current_accuracy <- sum(tripadvisor_data[fold_start_index:fold_end_index]$user_is_local == (current_prob > .5))/length(current_prob)
+    tripadvisor_cv_results[i] <- current_accuracy
+  }
+}
+
+# Taking the average of the classification rate for each iteration:
+tripadvisor_cv_classification_rate <- mean(tripadvisor_cv_results)
+print(tripadvisor_cv_classification_rate)
+
+# We get a classification rate of 0.7210582. This is slightly better than what
+# we would get from predicting every review as non_local, which would be 
+# an accuracy of 0.7197191. However, the difference is very small, so the
+# practical significance is questionable. However, it does suggest that perhaps
+# these minute differences in the features used to at least offer some
+# predictive power, in predicting whether a review is local or non_local. 

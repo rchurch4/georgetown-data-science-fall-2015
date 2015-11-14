@@ -1,7 +1,7 @@
 ################
 # Association Rules for TripAdvisor
 # Author: Ravi Makhija
-# Version 1
+# Version 1.1
 #
 # Description:
 # We explore the TripAdvisor dataset using association rule mining. 
@@ -36,7 +36,8 @@ require("plyr")
 
 # Script must be sourced (rather than run.) this is a convenience so that the 
 # working directory will point to the data using a relative path, without need 
-# for setting the working directory manually. 
+# for setting the working directory manually. This assumes directory structure
+# was maintained.
 
 path_to_this_script <- parent.frame(2)$ofile 
 setwd(gsub("analysis/association_rules/association_rules_tripadvisor.R", 
@@ -106,11 +107,8 @@ attach(tripadvisor_data_categorical)
 # adjust the minimum support and confidence levels to obtain the most 
 # meaningful rule set. Just as we did for Yelp. 
 
-# A first look shows that generally speaking, confidence levels for TripAdvisor
-# are much lower than for Yelp. This seems to be in line with the fact that
-# the difference in mean local/non-local user ratings for TripAdvisor was
-# much smaller than for Yelp. E.g. without large difference, we are not seeing
-# much confidence in implying a local or non-local user. 
+# A first look shows us that  the higher user ratings 4 and 5 are associated
+# with non_local reviews with a higher confidence then with local reviews.
 
 tripadvisor_rules_1 <- apriori(tripadvisor_data_categorical, 
                                parameter = list(minlen=1, supp=.01, conf=.5),
@@ -119,12 +117,10 @@ tripadvisor_rules_1 <- apriori(tripadvisor_data_categorical,
 inspect(tripadvisor_rules_1)
 plot(tripadvisor_rules_1)
 
-# Narrowing down by increasing the minimum support, however, shows that
-# ratings of 4 or 5, e.g. the higher ratings, are associated with non-local
-# users. This is also what we found with the parametric test! E.g. the t-test
-# showed that, while the difference was small, indeed there was a statistically
-# significant difference in mean user rating between non-local and local, in
-# favor of non-local reviews. 
+# Narrowing down by increasing the minimum support shows again that higher
+# ratings are associated with non_local reviewers. Of course, the non_local
+# reviews are being prioritized with a higher support, due to the class
+# imbalance with TripAdvisor data being in favor of non_local. 
 
 tripadvisor_rules_2 <- apriori(tripadvisor_data_categorical, 
                                parameter = list(minlen=1, supp=.2, conf=.5),
@@ -133,12 +129,13 @@ tripadvisor_rules_2 <- apriori(tripadvisor_data_categorical,
 inspect(tripadvisor_rules_2)
 plot(tripadvisor_rules_2)
 
-# We use one more level of support to mine the most frequent item sets. This
-# however does not bring up any new information when compared to the last
-# rule set. 
+# Bringing the support level down to .1, but minimum confidence up to .7, we
+# see again that higher ratings imply non_local reviews first. We also see that
+# reviewers that have at least 16 reviews on TripAdvisor seem to also imply
+# non_local reviews (as opposed to those who have very few reviews).
 
 tripadvisor_rules_3 <- apriori(tripadvisor_data_categorical, 
-                               parameter = list(minlen=1, supp=.3, conf=.1),
+                               parameter = list(minlen=1, supp=.1, conf=.7),
                                appearance = list(rhs=c("user_is_local=FALSE", "user_is_local=TRUE"), default="lhs"),
                                control = list(verbose=F))
 inspect(tripadvisor_rules_3)

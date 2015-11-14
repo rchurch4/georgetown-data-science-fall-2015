@@ -140,10 +140,9 @@ rm(tripadvisor_data_local_means,
 # Save as Rdata files for quick loading in the future.
 ################
 
-# Commented out since this was already done, and only needs to be saved once,
-# unless changes are made. 
+# Uncomment as needed to save files
 
-save(tripadvisor_data, file="tripadvisor_data.Rdata")
+#save(tripadvisor_data, file="tripadvisor_data.Rdata")
 #save(yelp_data, file="yelp_data.Rdata")
 
 ################
