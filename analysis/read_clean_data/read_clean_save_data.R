@@ -29,7 +29,7 @@ require(bit64)
 ################
 
 path_to_this_script <- parent.frame(2)$ofile # must be sourced (rathern than run)
-setwd(gsub("analysis/read_data/read_data_csv.R", 
+setwd(gsub("analysis/read_clean_data/read_clean_save_data.R", 
            "data", 
            path_to_this_script))
 
@@ -92,7 +92,7 @@ for (i in 0:50){
   tryCatch(
     { 
       print(paste("reading tripadvisor dc dataset", i))
-      tripadvisor_data <- rbind(tripadvisor_data, read.csv(paste("Washington_DC_District_of_Columbia_review_list", 5, "_cleaned_features.csv", sep=""), 
+      tripadvisor_data <- rbind(tripadvisor_data, read.csv(paste("Washington_DC_District_of_Columbia_review_list", i, "_cleaned_features.csv", sep=""), 
                                                            stringsAsFactors=FALSE, 
                                                            header=TRUE, 
                                                            colClasses = tripadvisor_column_data_types))
@@ -144,7 +144,7 @@ rm(tripadvisor_data_local_means,
 # unless changes are made. 
 
 save(tripadvisor_data, file="tripadvisor_data.Rdata")
-save(yelp_data, file="yelp_data.Rdata")
+#save(yelp_data, file="yelp_data.Rdata")
 
 ################
 # Optionally, ave as csv files
