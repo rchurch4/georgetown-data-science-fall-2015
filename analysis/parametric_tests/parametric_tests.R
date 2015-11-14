@@ -1,7 +1,7 @@
 ################
 # Parametric Analyses
 # Author: Ravi Makhija
-# Version 1.3
+# Version 1.4
 #
 # Description:
 # Parametric tests conducted on review data, including t-tests and logistic 
@@ -187,8 +187,10 @@ print(inter_website_ttest)
 # Note on assumptions for logistic regression:
 # We assume that logistic regression is a reasonable model here, e.g. that 
 # there is a linear relationship between the log odds of a local review, 
-# and the feature we use below. We also see that our sample size is large,
-# and therefore justify our use of statistical significance in our analyses.  
+# and the feature we use below. We also see that our sample size is large, so
+# that the sampling distributions of the coefficient estimators are
+# approximately normally distributed, so that we can draw inferences using
+# hypothesis testing on the coefficients. 
 
 # ------------------------
 # Yelp
