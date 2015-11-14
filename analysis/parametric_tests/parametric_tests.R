@@ -1,7 +1,7 @@
 ################
 # Parametric Analyses
 # Author: Ravi Makhija
-# Version 1.5
+# Version 1.6
 #
 # Description:
 # Parametric tests conducted on review data, including t-tests and logistic 
@@ -106,7 +106,7 @@ print(table(yelp_data$user_is_local))
 
 # A cursory look at the mean for local and non_local ratings.
 # The mean for local yelp reviews is 3.723254, while the mean for non-local
-# yelp reviews is 3.819291. 
+# yelp reviews is 3.818015. 
 
 print(yelp_data[ , mean(user_rating), by=user_is_local])
 
@@ -255,7 +255,7 @@ plot(threshold_candidates,
 # Next, we create a confusion matrix. Inspecting the results, it becomes more
 # clear that there is a serious issue with our model. Namely, while the true
 # positive rate is very good (about .98), the rate of false negatives is also
-# very high at 0.9654. It seems then that the class imbalance of local and
+# very high at 0.9656. It seems then that the class imbalance of local and
 # non_local is dominating here, and our model therefore may not be that great
 # for prediction after all, despite observing statistical significance. 
 
@@ -274,7 +274,7 @@ print(yelp_confusion_matrix)
 
 # Finally, we can use 5-fold cross-validation to better assess the 
 # classification accuracy, sticking with a threshold of 0.5. This gives a
-# classification rate of 0.6386705. But again, we acknowledge that the large
+# classification rate of 0.6428273. But again, we acknowledge that the large
 # class imbalance is likely dictating these results. 
 
 set.seed(1)
@@ -309,10 +309,10 @@ print(yelp_cv_classification_rate)
 
 # In conclusion, for the yelp data it seems that the class imbalance is
 # dictating the results of our model selection. In particular, the proportion
-# of the sample that is made up of local reviewers is 0.6366606. Which means,
+# of the sample that is made up of local reviewers is 0.6407532. Which means,
 # if one were to guess local every time, they would have a classification 
-# accuracy of 0.6366606. On the other hand, the cross-validated classification 
-# accuracy for the logistic regression model is 0.6386705. On one hand, this
+# accuracy of 0.6407532. On the other hand, the cross-validated classification 
+# accuracy for the logistic regression model is 0.6428273. On one hand, this
 # difference is very small. On the other hand, perhaps the increase in
 # classification rate may be attributed to there being some predictive power
 # in our features. 

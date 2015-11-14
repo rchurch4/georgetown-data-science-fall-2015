@@ -177,7 +177,7 @@ inspect(yelp_rules_4)
 plot(yelp_rules_4)
 
 # We use a third support level to look for the most frequent item sets overall. 
-# We see heree with rule 3 that user number of reviews in the medium category
+# We see here with rule 3 that user number of reviews in the medium category
 # [12, 134) are commonly associated with local reviewers. 
 yelp_rules_5 <- apriori(yelp_data_categorical, 
                         parameter = list(minlen=1, supp=.25, conf=0.1),
