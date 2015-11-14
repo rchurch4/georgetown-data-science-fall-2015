@@ -13,7 +13,7 @@
 #
 # How to run:
 #    Source this script (no need to set wd beforehand if directory structure is
-#    as downloaded).
+#    maintained as downloaded).
 #
 # References
 #   1) Set working directory to the file path of a script:
@@ -173,7 +173,6 @@ inter_website_ttest <- t.test(yelp_data$user_rating,
 print(inter_website_ttest)
 
 ################ HYPOTHESIS 3
-
 # Next, we try a logistic regression model, to try and predict user_is_local
 # using the other variables in the data set. We fit two models, one for each
 # website. We hypothesize that user ratings in particular should have some

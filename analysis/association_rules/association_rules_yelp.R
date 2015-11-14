@@ -1,16 +1,17 @@
 ################
-# Association Rules
+# Association Rules for Yelp
 # Author: Ravi Makhija
 # Version 1
 #
 # Description:
-# 
+# We explore the Yelp dataset using association rule mining.  
+#
 # File Dependencies:
-#   'data/tripadvisor_data.Rdata'
 #   'data/yelp_data.Rdata'
 #
 # How to run:
-#   Source file in R.
+#    Source this script (no need to set wd beforehand if directory structure is
+#    maintained as downloaded).
 #
 # References
 #   1) Set working directory to the file path of a script:
@@ -38,7 +39,7 @@ require("plyr")
 # for setting the working directory manually. 
 
 path_to_this_script <- parent.frame(2)$ofile 
-setwd(gsub("analysis/association_rules/association_rules.R", 
+setwd(gsub("analysis/association_rules/association_rules_yelp.R", 
            "data", 
            path_to_this_script))
 rm(path_to_this_script) # clean up
@@ -174,4 +175,13 @@ yelp_rules_4 <- apriori(yelp_data_categorical[ , -5],
                         control = list(verbose=F))
 inspect(yelp_rules_4)
 plot(yelp_rules_4)
-plot(yelp_rules_4, method="graph", control=list(type="items"))
+
+# We use a third support level to look for the most frequent item sets overall. 
+# We see heree with rule 3 that user number of reviews in the medium category
+# [12, 134) are commonly associated with local reviewers. 
+yelp_rules_5 <- apriori(yelp_data_categorical, 
+                        parameter = list(minlen=1, supp=.25, conf=0.1),
+                        appearance = list(rhs=c("user_is_local=FALSE", "user_is_local=TRUE"), default="lhs"),
+                        control = list(verbose=F))
+inspect(yelp_rules_5)
+plot(yelp_rules_5)
