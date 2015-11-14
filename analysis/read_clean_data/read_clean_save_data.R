@@ -1,7 +1,7 @@
 ################
 # Script to read in and clean data to prepare for analyses. 
 # Author: Ravi Makhija
-# Version 2
+# Version 2.1
 #
 # Description:
 # Read in csv data files of cleaned data with extra features for DC. Creates 
@@ -79,6 +79,9 @@ yelp_data$restaurant_num_reviews <- as.numeric(yelp_data$restaurant_num_reviews)
 yelp_data <- data.table(yelp_data)
 setkey(yelp_data, restaurant_name)
 
+# Remove the 1627 rows that do not have a user_restaurant_distance
+yelp_data <- yelp_data[ !is.na(user_restaurant_distance), ]
+
 ################
 # Read in data for TripAdvisor DC
 ################
@@ -143,7 +146,7 @@ rm(tripadvisor_data_local_means,
 # Uncomment as needed to save files
 
 #save(tripadvisor_data, file="tripadvisor_data.Rdata")
-#save(yelp_data, file="yelp_data.Rdata")
+save(yelp_data, file="yelp_data.Rdata")
 
 ################
 # Optionally, ave as csv files
