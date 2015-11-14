@@ -146,3 +146,9 @@ rm(tripadvisor_data_local_means,
 save(tripadvisor_data, file="tripadvisor_data.Rdata")
 save(yelp_data, file="yelp_data.Rdata")
 
+################
+# Optionally, ave as csv files
+################
+
+#write.csv(tripadvisor_data, file="tripadvisor_data.csv")
+#write.csv(yelp_data, file="yelp_data.csv")
