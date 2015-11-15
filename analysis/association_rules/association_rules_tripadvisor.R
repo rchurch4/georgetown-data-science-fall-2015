@@ -1,7 +1,9 @@
 ################
 # Association Rules for TripAdvisor
 # Author: Ravi Makhija
-# Version 1.1
+# Team: droptable
+# Project 2
+# Version 1.2
 #
 # Description:
 # We explore the TripAdvisor dataset using association rule mining. 
@@ -11,7 +13,8 @@
 #
 # How to run:
 #    Source this script (no need to set wd beforehand if directory structure is
-#    maintained as downloaded).
+#    maintained as downloaded). Alternatively, set the working directory to the
+#	 data directory manaully. 
 #
 # References
 #   1) Set working directory to the file path of a script:
@@ -38,6 +41,8 @@ require("plyr")
 # working directory will point to the data using a relative path, without need 
 # for setting the working directory manually. This assumes directory structure
 # was maintained.
+
+# Alternatively, set working directory to data directory manually. 
 
 path_to_this_script <- parent.frame(2)$ofile 
 setwd(gsub("analysis/association_rules/association_rules_tripadvisor.R", 
@@ -74,7 +79,7 @@ tripadvisor_data_categorical <- data.frame(user_is_local = as.factor(tripadvisor
 table(tripadvisor_data$user_rating)
 
 # Bin and add to new data set:
-# For the time being, we keep all five categories:
+# We keep all five categories:
 tripadvisor_data_categorical$user_rating <- as.factor(tripadvisor_data$user_rating)
 
 ###################

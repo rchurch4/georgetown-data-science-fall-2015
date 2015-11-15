@@ -1,6 +1,8 @@
 ################
 # Parametric Analyses
 # Author: Ravi Makhija
+# Team: droptable
+# Project 2
 # Version 1.6
 #
 # Description:
@@ -13,7 +15,8 @@
 #
 # How to run:
 #    Source this script (no need to set wd beforehand if directory structure is
-#    maintained as downloaded).
+#    maintained as downloaded). Alternatively, set working directory to data
+# 	 directory manually. 
 #
 # References
 #   1) Set working directory to the file path of a script:
@@ -33,6 +36,8 @@ library(pROC)
 # script must be sourced (rather than run.) this is a convenience so that the 
 # working directory will point to the data using a relative path, without need 
 # for setting the working directory manually. 
+
+# Alternatively, set working directory to data directory manually. 
 
 path_to_this_script <- parent.frame(2)$ofile 
 setwd(gsub("analysis/parametric_tests/parametric_tests.R", 
@@ -87,7 +92,7 @@ load("yelp_data.Rdata")
 # broadly justify our use of the mean rating with this approach. 
 
 # Assumption 5 was violated by default since we are again on an ordinal scale. 
-# However, if we imagine fillig in the continuous scale ratings, the data
+# However, if we imagine filling in the continuous scale ratings, the data
 # appear closer to a normal distribution. However, there does seem to be a
 # left skew, e.g. ratings of 4 or 5 are generally more popular than than lower
 # ratings (which is a nice sign of an optimistic society perhaps!) With this in
@@ -125,7 +130,7 @@ yelp_ttest <- t.test(yelp_data[user_is_local == 1]$user_rating,
 print(yelp_ttest)
 
 # ------------------------
-# Again, for TripAdvisor data: 
+# Again we test hypotheses 1, for TripAdvisor data: 
 # H_0: The mean user rating for local and non-local reviewers is the same.  
 # H_a: The mean user rating for local and non-local reviewers is not the same.  
 
@@ -173,21 +178,24 @@ inter_website_ttest <- t.test(yelp_data$user_rating,
 print(inter_website_ttest)
 
 ################ HYPOTHESIS 3
-# Next, we try a logistic regression model, to try and predict user_is_local
-# using the other variables in the data set. We fit two models, one for each
-# website. We hypothesize that user ratings in particular should have some
+# We hypothesize that user ratings in particular should have some
 # predictive power when predicting whether a user is local or non-local. And,
 # that other variables in our data set may also contribute some predictive
 # power. 
+# 
+# We try a logistic regression model, to try and predict user_is_local
+# using the other variables in the data set. We approach each website
+# separately. 
 
 ################
 # Logistic Regression
 ################
 
 # Note on assumptions for logistic regression:
+#
 # We assume that logistic regression is a reasonable model here, e.g. that 
 # there is a linear relationship between the log odds of a local review, 
-# and the feature we use below. We also see that our sample size is large, so
+# and the features we include below. We also see that our sample size is large, so
 # that the sampling distributions of the coefficient estimators are
 # approximately normally distributed, so that we can draw inferences using
 # hypothesis testing on the coefficients. 
@@ -229,13 +237,13 @@ load("yelp_roc.Rdata")
 plot(yelp_roc, 
      main = "ROC Curve for Yelp Logistic Regression Model")
 
-# So, we adpot our logistic regression model yelp_logit_3, which has three
+# So, we adopt our logistic regression model yelp_logit_3, which has three
 # predictors: user_rating + user_num_reviews + user_review_length
 
 # In this case, we are interested in the accuracy of predicting whether a user
 # is local or not. E.g. we don't necessarily want to prioritize one or the
 # other, and therefore do not have a need for tweaking the false positive rate
-# threshold. Therefore, we want to maximize the accuracy. We can see this
+# threshold. Instead, we want to maximize the accuracy. We can see this
 # is the case when the threshold is 0.5. Though, lower thresholds also provide
 # fair accuracy. This is likely due to the class imbalance, e.g. there are 
 # almost twice as many local users than non-local users in this data set. 
@@ -256,7 +264,7 @@ plot(threshold_candidates,
 # clear that there is a serious issue with our model. Namely, while the true
 # positive rate is very good (about .98), the rate of false negatives is also
 # very high at 0.9656. It seems then that the class imbalance of local and
-# non_local is dominating here, and our model therefore may not be that great
+# non-local is dominating here, and our model therefore may not be that great
 # for prediction after all, despite observing statistical significance. 
 
 p <- nrow(yelp_data[user_is_local == TRUE])
@@ -285,7 +293,7 @@ yelp_data_shuffled <- copy(yelp_data)[sample(1:n), ]
 yelp_cv_results <- numeric(num_folds)
 
 for (i in 1:num_folds) {
-  if (i != num_folds) {
+  if (i != num_folds) { # first four folds
     fold_start_index <- (i-1)*fold_n + 1
     fold_end_index <- i*fold_n
     current_lm <- glm(user_is_local ~ user_rating + user_num_reviews + user_review_length, data = yelp_data[!(fold_start_index:fold_end_index)], family = "binomial")
@@ -293,7 +301,7 @@ for (i in 1:num_folds) {
     current_accuracy <- sum(yelp_data[fold_start_index:fold_end_index]$user_is_local == (current_prob > .5))/length(current_prob)
     yelp_cv_results[i] <- current_accuracy
   }
-  else {
+  else { # last fold (uses remaining samples -- ensuring not too small an interval)
     fold_start_index <- (i-1)*fold_n + 1
     fold_end_index <- n
     current_lm <- glm(user_is_local ~ user_rating + user_num_reviews + user_review_length, data = yelp_data[!(fold_start_index:fold_end_index)], family = "binomial")
@@ -303,7 +311,7 @@ for (i in 1:num_folds) {
   }
 }
 
-# Taking the average of the classification rate for each iteration:
+# Taking the average of the classification rate for each CV iteration yields:
 yelp_cv_classification_rate <- mean(yelp_cv_results)
 print(yelp_cv_classification_rate)
 
@@ -350,8 +358,8 @@ plot(tripadvisor_roc,
 
 # Next, we look at a confusion matrix. This time, we see that the TNR is great,
 # while the TPR is quite horrific. This, again, seems do be due to a class
-# imbalance. For TripAdvisor, the class imbalanace is in favor of non_local
-# users, which is why the confusion matrix this time favors FPR over TPR, 
+# imbalance. For TripAdvisor, the class imbalance is in favor of non_local
+# users, which is why the confusion matrix this time favors TNR over TPR, 
 # due to the way local vs. non-local is coded. 
 
 p <- nrow(tripadvisor_data[user_is_local == TRUE])

@@ -1,7 +1,9 @@
 ################
 # Association Rules for Yelp
 # Author: Ravi Makhija
-# Version 1
+# Team: droptable
+# Project 2
+# Version 1.1
 #
 # Description:
 # We explore the Yelp dataset using association rule mining.  
@@ -11,7 +13,8 @@
 #
 # How to run:
 #    Source this script (no need to set wd beforehand if directory structure is
-#    maintained as downloaded).
+#    maintained as downloaded). Alternatively, set working directory to data
+# 	 directory manually. 
 #
 # References
 #   1) Set working directory to the file path of a script:
@@ -37,6 +40,8 @@ require("plyr")
 # Script must be sourced (rather than run.) this is a convenience so that the 
 # working directory will point to the data using a relative path, without need 
 # for setting the working directory manually. 
+
+# Alternatively, set working directory to data directory manually. 
 
 path_to_this_script <- parent.frame(2)$ofile 
 setwd(gsub("analysis/association_rules/association_rules_yelp.R", 
@@ -122,7 +127,7 @@ head(yelp_data_categorical)
 
 attach(yelp_data_categorical)
 
-# Since a central question we are asking is whether or not local or non_local
+# Since a central question we are asking is whether or not local or non-local
 # ratings are higher, we start association rule mining with the binary
 # user_is_local on the right, to see if we can find any implications. We 
 # adjust the minimum support and confidence levels to obtain the most 
