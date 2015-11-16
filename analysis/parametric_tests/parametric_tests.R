@@ -3,7 +3,7 @@
 # Author: Ravi Makhija
 # Team: droptable
 # Project 2
-# Version 1.6
+# Version 1.7
 #
 # Description:
 # Parametric tests conducted on review data, including t-tests and logistic 
@@ -419,5 +419,5 @@ print(tripadvisor_cv_classification_rate)
 # we would get from predicting every review as non_local, which would be 
 # an accuracy of 0.7197191. However, the difference is very small, so the
 # practical significance is questionable. However, it does suggest that perhaps
-# these minute differences in the features used to at least offer some
+# these minute differences show that the features do at least offer some 
 # predictive power, in predicting whether a review is local or non_local. 
