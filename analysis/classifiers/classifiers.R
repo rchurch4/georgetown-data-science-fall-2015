@@ -2,10 +2,13 @@
 # Drop Table - Teamname
 # Project 2
 # Classifiers
+#
+# This file shows the code, results and analysis of three different data driven predictive models
+# https://cran.r-project.org/web/packages/caret/vignettes/caret.pdf was used as a source for the caret package
 
 library(rpart)
 library(lazy)
-library(naiveBayes)
+library(caret)
 load("yelp_data.Rdata")
 
 # Decision Tree
@@ -38,11 +41,54 @@ table(yelp_pred.lazy>.5, yelp_data[1:10000, "user_is_local"])
 #  FALSE  1403 2403
 #  TRUE   1981 4213
 #
-# Here our classifier has only 56% accuracy; much worse than always guessing a user is local
+# Here the confusion matrix shows our classifier has only 56% accuracy; much worse than always guessing a user is local
 
-# NaiveBayes
-# Having failed twice, we try a new task with the naive bayes classifier.
-# We will see if user location has any predictive power in determining user_rating
-yelp.bayes <- naiveBayes(user_rating~restaurant_overall_rating+restaurant_num_reviews+user_restaurant_distance+user_num_reviews+user_review_length, yelp_data, subset=100000:200000)
+# Naive Bayes
+# Finally we attempt the classification task using a naive bayes classifier
+# We use the caret package for 5-fold cross validation
+# This time we usthe TripAdvisor data as our example:
 
+model <- train(as.factor(user_is_local)~restaurant_overall_rating+
+ 			   restaurant_num_reviews+user_rating+
+ 			   user_num_reviews+user_review_length, 
+ 			   data=tripadvisor_data, 
+ 			   method="nb", 
+ 			   trControl=trainControl(method="cv",number=5), 
+ 			   metric="Accuracy")
+ 			   
+# > model
+# 100831 samples
+     # 5 predictors
+     # 2 classes: 'FALSE', 'TRUE' 
 
+# No pre-processing
+# Resampling: Cross-Validation (5 fold) 
+
+# Summary of sample sizes: 80665, 80665, 80664, 80665, 80665 
+
+# Resampling results across tuning parameters:
+
+  # usekernel  Accuracy  Kappa   Accuracy SD  Kappa SD
+  # FALSE      0.711     0.0481  0.00213      0.00604 
+  # TRUE       0.723     0.0273  0.000657     0.00255 
+
+# Tuning parameter 'fL' was held constant at a value of 0
+# Accuracy was used to select the optimal model using  the largest value.
+# The final values used for the model were fL = 0 and usekernel = TRUE.
+
+# Now that we have this model, we use it to make our predictions
+p <- predict(model, tripadvisor_data)
+
+# We check the accuracy and the confusion matrix:
+mean(p==tripadvisor_data$user_is_local)
+# [1] 0.7236366
+
+table(p,tripadvisor_data$user_is_local)
+# p       FALSE  TRUE
+#   FALSE 72292 27588
+#   TRUE    278   673
+
+# As in the parametric test, we can see that the abundance of non-local users dominate,
+# but the model does correctly identify over 70% of the few reviews it marks as local.
+# The overall accuracy is slightly better than the total percentage of non-local users (71.97%),
+# which leaves open the possibility that the user ratings and other variables carry some predictive power.
