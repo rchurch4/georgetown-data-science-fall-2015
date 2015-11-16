@@ -3,7 +3,7 @@
 # Author: Ravi Makhija
 # Team: droptable
 # Project 2
-# Version 1.2
+# Version 1.3
 #
 # Description:
 # We explore the TripAdvisor dataset using association rule mining. 
@@ -14,7 +14,7 @@
 # How to run:
 #    Source this script (no need to set wd beforehand if directory structure is
 #    maintained as downloaded). Alternatively, set the working directory to the
-#	 data directory manaully. 
+#	 data directory manually. 
 #
 # References
 #   1) Set working directory to the file path of a script:
@@ -42,7 +42,7 @@ require("plyr")
 # for setting the working directory manually. This assumes directory structure
 # was maintained.
 
-# Alternatively, set working directory to data directory manually. 
+# Alternatively, set working directory to data directory manually and skip this. 
 
 path_to_this_script <- parent.frame(2)$ofile 
 setwd(gsub("analysis/association_rules/association_rules_tripadvisor.R", 

@@ -46,7 +46,7 @@ table(yelp_pred.lazy>.5, yelp_data[1:10000, "user_is_local"])
 # Naive Bayes
 # Finally we attempt the classification task using a naive bayes classifier
 # We use the caret package for 5-fold cross validation
-# This time we usthe TripAdvisor data as our example:
+# This time we use the TripAdvisor data as our example:
 
 model <- train(as.factor(user_is_local)~restaurant_overall_rating+
  			   restaurant_num_reviews+user_rating+

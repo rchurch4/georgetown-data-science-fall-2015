@@ -3,7 +3,7 @@
 # Author: Ravi Makhija
 # Team: droptable
 # Project 2
-# Version 1.1
+# Version 1.2
 #
 # Description:
 # We explore the Yelp dataset using association rule mining.  
@@ -41,7 +41,7 @@ require("plyr")
 # working directory will point to the data using a relative path, without need 
 # for setting the working directory manually. 
 
-# Alternatively, set working directory to data directory manually. 
+# Alternatively, set working directory to data directory manually and skip this. 
 
 path_to_this_script <- parent.frame(2)$ofile 
 setwd(gsub("analysis/association_rules/association_rules_yelp.R", 
@@ -53,7 +53,6 @@ rm(path_to_this_script) # clean up
 # Load in data
 ################
 
-load("tripadvisor_data.Rdata")
 load("yelp_data.Rdata")
 
 ################

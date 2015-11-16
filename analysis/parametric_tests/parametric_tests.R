@@ -3,7 +3,7 @@
 # Author: Ravi Makhija
 # Team: droptable
 # Project 2
-# Version 1.7
+# Version 1.8
 #
 # Description:
 # Parametric tests conducted on review data, including t-tests and logistic 
@@ -37,7 +37,7 @@ library(pROC)
 # working directory will point to the data using a relative path, without need 
 # for setting the working directory manually. 
 
-# Alternatively, set working directory to data directory manually. 
+# Alternatively, set working directory to data directory manually and skip this. 
 
 path_to_this_script <- parent.frame(2)$ofile 
 setwd(gsub("analysis/parametric_tests/parametric_tests.R", 
