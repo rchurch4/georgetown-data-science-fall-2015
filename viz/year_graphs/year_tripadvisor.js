@@ -40,7 +40,7 @@ var svg_year_tripadvisor = d3.select("#line_graph_tripadvisor_year")
               "translate(" + margin_year_tripadvisor.left + "," + margin_year_tripadvisor.top + ")");
 
 // Get the data
-d3.tsv("tripadvisor_annual_local.tsv", function(error, data) {
+d3.csv("tripadvisor_annual_local.csv", function(error, data) {
     data.forEach(function(d) {
         d.year = parseDate_year_tripadvisor(d.year);
         d.mean_rating = +d.mean_rating;
@@ -79,7 +79,7 @@ function update_data_tripadvisor() {
 	d3.select("#title_ratings_tripadvisor_year").text("Non-Local Reviewers")
 		
     // Get the data again
-    d3.tsv("tripadvisor_annual_nonlocal.tsv", function(error, data) {
+    d3.csv("tripadvisor_annual_nonlocal.csv", function(error, data) {
        	data.forEach(function(d) {
 	    	d.year = parseDate_year_tripadvisor(d.year);
 	    	d.mean_rating = +d.mean_rating;
@@ -111,7 +111,7 @@ function update_data_tripadvisor() {
 	d3.select("#title_ratings_tripadvisor_year").text("Local Reviewers")
 	
     // Get the data again
-    d3.tsv("tripadvisor_annual_local.tsv", function(error, data) {
+    d3.csv("tripadvisor_annual_local.csv", function(error, data) {
        	data.forEach(function(d) {
 	    	d.year = parseDate_year_tripadvisor(d.year);
 	    	d.mean_rating = +d.mean_rating;

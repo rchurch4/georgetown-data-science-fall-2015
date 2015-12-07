@@ -40,7 +40,7 @@ var svg_year_yelp = d3.select("#line_graph_yelp_year")
               "translate(" + margin_year_yelp.left + "," + margin_year_yelp.top + ")");
 
 // Get the data
-d3.tsv("yelp_annual_local.tsv", function(error, data) {
+d3.csv("yelp_annual_local.csv", function(error, data) {
     data.forEach(function(d) {
         d.year = parseDate_year_yelp(d.year);
         d.mean_rating = +d.mean_rating;
@@ -79,7 +79,7 @@ function update_data_yelp() {
 	d3.select("#title_ratings_yelp_year").text("Non-Local Reviewers")
 		
     // Get the data again
-    d3.tsv("yelp_annual_nonlocal.tsv", function(error, data) {
+    d3.csv("yelp_annual_nonlocal.csv", function(error, data) {
        	data.forEach(function(d) {
 	    	d.year = parseDate_year_yelp(d.year);
 	    	d.mean_rating = +d.mean_rating;
@@ -111,7 +111,7 @@ function update_data_yelp() {
 	d3.select("#title_ratings_yelp_year").text("Local Reviewers")
 	
     // Get the data again
-    d3.tsv("yelp_annual_local.tsv", function(error, data) {
+    d3.csv("yelp_annual_local.csv", function(error, data) {
        	data.forEach(function(d) {
 	    	d.year = parseDate_year_yelp(d.year);
 	    	d.mean_rating = +d.mean_rating;
