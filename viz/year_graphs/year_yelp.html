@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+<link rel="stylesheet" type="text/css" href="year.css" media="screen" />
+</head>
+
+<body>
+<center>
+
+<!---------------------------------------->
+<!-- Yelp -->
+
+<!-- Titles -->
+<font face="Times New Roman">
+<h1>Yelp Annual Mean Rating (Zoom on y-axis)</h1>
+<h1 id="title_ratings_yelp_year">Local Reviewers</h1>
+</font>
+
+<!-- Button to switch local/non-local -->
+<button id="button_ratings_yelp_year" onclick="update_data_yelp()">Click to Change Local vs. Non-local</button>
+
+<!-- This is where yelp graph is inserted -->
+<div id="line_graph_yelp_year"></div>
+
+<!---------------------------------------->
+<!-- load scripts -->    
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="year_yelp.js"></script>
+
+</center>
+</body>
