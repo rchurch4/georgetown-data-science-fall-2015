@@ -1,5 +1,0 @@
-Ideas for story:
-1) useful to show difference in ratings distribution between local and non-local ratings distribution. 
-2) also shows that ratings fo 4 and 5 are much more popular in general. 
-3) one interesting observation is that for the yelp data, a rating of 4 has the highest frequency. however, for tripadvisor data, a rating of 5 has the highest frequency, regardless of whether we are considering only local or only non-local. i remember we noted that tripadvisor is generally more geared towards a traveling population. so, this observation supports the idea that non-locals, e.g. those that travel, give higher ratings. 
-
