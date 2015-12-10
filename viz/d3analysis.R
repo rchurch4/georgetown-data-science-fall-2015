@@ -8,8 +8,7 @@
 require(data.table)
 
 # Set the working directory to data directory. 
-#setwd("please_change_me/data")
-setwd("C:/Users/Ravi/Docs/Geekazoid/Courses/Intro_to_Analytics/Project/Git/georgetown-data-science-fall-2015/data")
+setwd("please_change_me/data")
 
 # Load data
 load("tripadvisor_data.Rdata")
