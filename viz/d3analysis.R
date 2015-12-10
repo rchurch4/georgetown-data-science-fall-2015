@@ -1,9 +1,9 @@
-# Supplementary analyses and data preparation for prepping and brainstorming d3 visualizations. 
+# Supplementary analyses and data preparation for brainstorming and prepping d3/js visualizations. 
 
 # Analytics Project 3
 # Author: Ravi Makhija
 # Team: Droptable
-# Version: 1.1
+# Version: 1.2
 
 require(data.table)
 
@@ -20,6 +20,7 @@ load("yelp_data.Rdata")
 
 ################################
 # Distribution of ratings for local vs. non-local
+# Used for d3 bar charts
 
 # yelp
 setkey(yelp_data, user_is_local, user_rating)
@@ -37,10 +38,13 @@ tripadvisor_data[user_is_local==FALSE,.N/nrow(tripadvisor_data[user_is_local==FA
 
 ################################
 # Annual ratings - local vs. non-local
+# Used for d3 line graphs
 
-# Basic Idea: if pattern is consisten throughout years, we have a stronger argument for not controlling for time in our models. 
+# Basic Idea: If a pattern is consistent every year, we have a stronger argument for those patterns. 
+# 			  E.g. less likely that they are due to chance. 
 
 # YELP
+
 # coerce dates to Date type, save features in a new data.table
 yelp_data_new <- yelp_data[ , .(user_is_local, user_rating)]
 yelp_data_new[ , user_review_date := .(as.Date(yelp_data$user_review_date))]
@@ -81,6 +85,9 @@ write.csv(tripadvisor_annual_nonlocal[year >= 2010, .(year, mean_rating)], file=
 
 ################################
 # Controlling for Restaurants - local vs. non-local mean ratings
+# We were interested in seeing if locals/non-locals are prone to going to certain restaurants, and 
+# the implications that may have on our results. But, this analysis didn't turn up anything worth
+# including in a visualization. 
 
 # prepare data for analysis
 
@@ -98,7 +105,7 @@ setkey(restaurant_total_N, restaurant_name)
 
 restaurant_all <- restaurant_nonlocal_N[restaurant_local_N[restaurant_total_N]] # joins
 
-restaurant_all[ , c("proportion_local", "proportion_nonlocal") := .(local_N/total_N, nonlocal_N/total_N)]
+restaurant_all[ , c("proportion_local", "proportion_nonlocal") := .(local_N/total_N, nonlocal_N/total_N)] # calculate proportions
 
 # remove NA function from here: 
 # http://stackoverflow.com/questions/7235657/fastest-way-to-replace-nas-in-a-large-data-table
@@ -122,7 +129,8 @@ tail(restaurant_all[total_N >= 200], 10)
 #          row.names=FALSE)
 
 ################################
-# changing radius
+# Impact of changing radius
+# Used in js map/radius visualization
 
 #yelp
 yelp_data_radius <- copy(yelp_data)
@@ -157,6 +165,5 @@ r <- 1000
 print(tripadvisor_data_radius[user_restaurant_distance <= r, mean(user_rating)])
 print(tripadvisor_data_radius[user_restaurant_distance <= r, .N])
 print(tripadvisor_data_radius[user_restaurant_distance > r, mean(user_rating)])
-
 
 
