@@ -9,6 +9,7 @@ require(data.table)
 
 # Set the working directory to data directory. 
 #setwd("please_change_me/data")
+setwd("C:/Users/Ravi/Docs/Geekazoid/Courses/Intro_to_Analytics/Project/Git/georgetown-data-science-fall-2015/data")
 
 # Load data
 load("tripadvisor_data.Rdata")
@@ -115,12 +116,14 @@ remove_NA_from_DT = function(DT) {
 }
 
 remove_NA_from_DT(restaurant_all)
+restaurant_all # check
 
-# high proportion for non_local & local, with minimum total_N of 200
+# proportion for non_local & local, with minimum total_N of 200
 
 setkey(restaurant_all, proportion_local)
-head(restaurant_all[total_N >= 200], 10)
-tail(restaurant_all[total_N >= 200], 10)
+tail(restaurant_all[total_N >= 200], 10) # local top 10
+setkey(restaurant_all, proportion_nonlocal)
+tail(restaurant_all[total_N >= 200], 10) # non-local top 10
 
 # write csv
 
